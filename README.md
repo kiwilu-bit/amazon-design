@@ -6,23 +6,34 @@
 
 ## 📁 benchmark 2.0 renew
 
-**Brand Benchmark v1.0**  
+### Brand Benchmark v2.0 ✨ Latest
+
 更新日期：2026-05-18
 
-### 设计目标
+**👉 [点击查看 Brand Benchmark v2.0 原型](https://kiwilu-bit.github.io/amazon-design/benchmark%202.0%20renew/brand-benchmark-v2.0.html)**
+
+#### v2.0 升级亮点
+
+- **V5 Strip + Micro Grid 单元格**：左侧彩色竖条直观显示层级，右侧 3 列微型网格同屏对比 P25 / P50 / P75 基准值与涨跌幅
+- **当前 Benchmark 列高亮**：所选 P25 / P50 / P75 对应列自动蓝色高亮，快速定位
+- **色彩编码**：绿（P0–P25）/ 蓝（P25–P50）/ 橙（P50–P75）/ 红（P75–P100）
+
+---
+
+### Brand Benchmark v1.0
+
+更新日期：2026-05-18
+
+**👉 [点击查看 Brand Benchmark v1.0 原型](https://kiwilu-bit.github.io/amazon-design/benchmark%202.0%20renew/brand-benchmark-v1.0.html)**
+
+#### 设计目标
 
 > 让运营人员一目了然地了解：
 > 1. 自己每个指标模块**所处的等级**（P0–P25 / P25–P50 / P50–P75 / P75–P100）
 > 2. 各等级的**基准数据**（P25 · P50 · P75 具体数值）
 > 3. 当前数值与**下一个等级**之间还差多少（vs P25 / P50 / P75 对比）
 
-### 🔗 在线预览
-
-**👉 [点击查看 Brand Benchmark v1.0 原型](https://kiwilu-bit.github.io/amazon-design/benchmark%202.0%20renew/brand-benchmark-v1.0.html)**
-
-> GitHub Pages 首次部署约需 1–3 分钟生效，若链接暂时 404 请稍后刷新。
-
-### 功能亮点
+#### 功能亮点
 
 - **热力图矩阵**：SP / SB / SD 三种广告类型，多指标横向对比
 - **分位层级标签**：每个单元格直接显示所属 P 分位区间（P0–P25 等）
