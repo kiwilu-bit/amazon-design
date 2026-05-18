@@ -707,8 +707,8 @@ td.cell-hl {
 
 /* Metric data cell */
 .td-m {
-  width: 250px; min-width: 250px; max-width: 250px;
-  padding: 4px 8px; text-align: left;
+  width: 240px; min-width: 240px; max-width: 240px;
+  padding: 2px 4px; text-align: left;
   position: relative; z-index: 0;
   min-height: 52px;
 }
@@ -716,12 +716,11 @@ td.cell-hl {
 .td-m         { border-left: 1px solid var(--pcv-divider); }
 .td-m.first-in-group { border-left: 2px solid var(--pcv-border); }
 
-/* ── V5 Strip + Micro Grid cell ─────────────────────────────────────────── */
-/* Clickable cell */
+/* ── Figma-matched cell (node 1040:26443) ────────────────────────────────── */
 .td-m[data-val] { cursor: pointer; }
 .td-m[data-val]:hover .m-cell { background: rgba(2,83,182,0.03); }
 
-/* Arrow icon top-right on hover */
+/* NE arrow on hover */
 .td-m[data-val]::after {
   content: ''; position: absolute; top: 5px; right: 6px;
   width: 14px; height: 14px; background-color: #0253B6;
@@ -733,60 +732,60 @@ td.cell-hl {
 }
 .td-m[data-val]:hover::after { opacity: 0.6; }
 
-/* Cell wrapper: left tier-color strip + content body */
+/* Cell outer wrapper */
 .m-cell {
-  display: flex; flex-direction: row;
-  border-radius: var(--radius-sm); overflow: hidden;
-  min-height: 72px; cursor: default;
+  display: flex; flex-direction: column;
+  gap: 7px; padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  min-height: 62px; cursor: default;
 }
 .m-cell.no-data {
-  align-items: center; justify-content: center;
-  min-height: 44px; padding: 6px 8px;
+  justify-content: center; min-height: 44px; padding: 8px 12px;
 }
 .m-cell.no-data .mc-val { font-size: 12px; color: var(--pcv-text-dis); font-weight: 400; }
 
-/* Left color strip — hidden */
-.mc-strip { display: none; }
-
-/* Body: value+tier row + micro grid */
-.mc-body {
-  flex: 1; display: flex; flex-direction: column;
-  gap: 5px; padding: 6px 6px 6px 8px; min-width: 0;
-}
+/* Row 1: value + tier badge */
 .mc-row1 { display: flex; align-items: center; gap: 6px; }
-.mc-val  { font-size: 14px; font-weight: 700; color: var(--pcv-text-primary); line-height: 1; }
-
-/* Tier tag */
+.mc-val  { font-size: 16px; font-weight: 700; color: var(--pcv-text-primary); line-height: 1; }
 .mc-tier {
-  font-size: 10px; font-weight: 500; padding: 1px 5px;
-  border-radius: 4px; white-space: nowrap; flex-shrink: 0;
-  border: none; line-height: 16px;
+  font-size: 10px; font-weight: 600; padding: 2px 6px;
+  border-radius: 4px; white-space: nowrap; flex-shrink: 0; line-height: 1;
 }
 .tier-t1 { background: rgba(40,199,111,0.12); color: #1a9e55; }
 .tier-t2 { background: rgba(2,83,182,0.08);   color: #1a5db0; }
 .tier-t3 { background: rgba(255,159,67,0.12); color: #c07400; }
 .tier-t4 { background: rgba(234,84,85,0.10);  color: #c9342e; }
 
-/* Micro grid: 3 columns P25 / P50 / P75 */
-.mc-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  border: 1px solid var(--pcv-divider); border-radius: 4px; overflow: hidden;
+/* Row 2: P25 | P50 | P75 — each with label + value + delta inline */
+.mc-bm-row {
+  display: flex; align-items: stretch;
 }
-.mc-gcol {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 3px 2px; gap: 1px;
+.mc-bm-col {
+  flex: 1; display: flex; align-items: center; gap: 4px;
+  padding: 4px 5px 4px 4px;
   border-right: 1px solid var(--pcv-divider);
+  min-width: 0;
 }
-.mc-gcol:last-child { border-right: none; }
-.mc-gcol-lbl  { font-size: 9px; font-weight: 600; color: #B2B2B8; letter-spacing: 0.3px; line-height: 1; }
-.mc-gcol-val  { font-size: 11px; font-weight: 600; color: var(--pcv-text-opt); line-height: 1; }
-.mc-gcol-d    { font-size: 10px; font-weight: 500; display: flex; align-items: center; gap: 1px; line-height: 1; }
-.mc-gcol-d.pos { color: var(--pcv-success); }
-.mc-gcol-d.neg { color: var(--pcv-error); }
-.mc-gcol-d.neu { color: var(--pcv-text-dis); }
-.mc-gcol-d svg { flex-shrink: 0; }
+.mc-bm-col:first-child { padding-left: 0; }
+.mc-bm-col:last-child  { border-right: none; }
+.mc-bm-lbl {
+  font-size: 12px; font-weight: 600; color: var(--pcv-text-sec);
+  white-space: nowrap; flex-shrink: 0;
+}
+.mc-bm-val {
+  font-size: 12px; font-weight: 600; color: var(--pcv-text-sec);
+  white-space: nowrap; flex-shrink: 0;
+}
+.mc-bm-d {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 12px; font-weight: 400; white-space: nowrap; flex-shrink: 0;
+}
+.mc-bm-d.pos { color: var(--pcv-success); }
+.mc-bm-d.neg { color: var(--pcv-error); }
+.mc-bm-d.neu { color: var(--pcv-text-dis); }
+.mc-bm-d svg { flex-shrink: 0; }
 
-/* Keep delta helpers for tooltip etc */
+/* Keep for tooltip compat */
 .mc-delta { font-size: 11px; font-weight: 500; line-height: 1; display: flex; align-items: center; gap: 2px; }
 .mc-delta.pos { color: var(--pcv-success); }
 .mc-delta.neg { color: var(--pcv-error); }
@@ -1553,14 +1552,14 @@ function deltaSpan(val, bench, good) {
   return `<span class="mc-delta ${cls}">${arrowSVG(isUp)}&nbsp;${sign}${pct.toFixed(1)}%</span>`;
 }
 
-// ── V5: Strip + Micro Grid cell renderer ─────────────────────────────────────
-function gColDelta(val, bench, good) {
+// ── Figma-matched cell renderer (node 1040:26443) ────────────────────────────
+function bmDelta(val, bench, good) {
   const pct = (val - bench) / bench * 100;
   const isUp = pct >= 0;
   const isGood = good === 'high' ? isUp : !isUp;
   const cls = Math.abs(pct) < 1 ? 'neu' : isGood ? 'pos' : 'neg';
   const sign = pct >= 0 ? '+' : '';
-  return `<span class="mc-gcol-d ${cls}">${arrowSVG(isUp)}${sign}${pct.toFixed(1)}%</span>`;
+  return `<span class="mc-bm-d ${cls}">${arrowSVG(isUp)}${sign}${pct.toFixed(1)}%</span>`;
 }
 
 function metricCellHTML(m, def, adType) {
@@ -1569,31 +1568,29 @@ function metricCellHTML(m, def, adType) {
   const { val, p50 } = m[def.key];
   const p25 = p50 * 0.75, p75 = p50 * 1.25;
   const tier = getTier(val, p50);
-  return `<td class="td-m ${adType}-col${fc} has-${tier}" data-tier="${tier}"
+  return `<td class="td-m ${adType}-col${fc}" data-tier="${tier}"
       data-val="${val}" data-p50="${p50}" data-good="${def.good}"
       data-label="${def.label}" data-adtype="${adType.toUpperCase()}">
     <div class="m-cell">
-      <div class="mc-body">
-        <div class="mc-row1">
-          <span class="mc-val">${def.fmt(val)}</span>
-          <span class="mc-tier tier-${tier}">${TIER_LABEL[tier]}</span>
+      <div class="mc-row1">
+        <span class="mc-val">${def.fmt(val)}</span>
+        <span class="mc-tier tier-${tier}">${TIER_LABEL[tier]}</span>
+      </div>
+      <div class="mc-bm-row">
+        <div class="mc-bm-col">
+          <span class="mc-bm-lbl">P25</span>
+          <span class="mc-bm-val">${def.fmt(p25)}</span>
+          ${bmDelta(val, p25, def.good)}
         </div>
-        <div class="mc-grid">
-          <div class="mc-gcol">
-            <span class="mc-gcol-lbl">P25</span>
-            <span class="mc-gcol-val">${def.fmt(p25)}</span>
-            ${gColDelta(val, p25, def.good)}
-          </div>
-          <div class="mc-gcol">
-            <span class="mc-gcol-lbl">P50</span>
-            <span class="mc-gcol-val">${def.fmt(p50)}</span>
-            ${gColDelta(val, p50, def.good)}
-          </div>
-          <div class="mc-gcol">
-            <span class="mc-gcol-lbl">P75</span>
-            <span class="mc-gcol-val">${def.fmt(p75)}</span>
-            ${gColDelta(val, p75, def.good)}
-          </div>
+        <div class="mc-bm-col">
+          <span class="mc-bm-lbl">P50</span>
+          <span class="mc-bm-val">${def.fmt(p50)}</span>
+          ${bmDelta(val, p50, def.good)}
+        </div>
+        <div class="mc-bm-col">
+          <span class="mc-bm-lbl">P75</span>
+          <span class="mc-bm-val">${def.fmt(p75)}</span>
+          ${bmDelta(val, p75, def.good)}
         </div>
       </div>
     </div>
