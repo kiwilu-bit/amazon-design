@@ -745,14 +745,8 @@ td.cell-hl {
 }
 .m-cell.no-data .mc-val { font-size: 12px; color: var(--pcv-text-dis); font-weight: 400; }
 
-/* Left color strip */
-.mc-strip {
-  width: 5px; flex-shrink: 0; border-radius: 3px 0 0 3px;
-}
-.has-t1 .mc-strip { background: #28c76f; }
-.has-t2 .mc-strip { background: #0253B6; }
-.has-t3 .mc-strip { background: #ff9f43; }
-.has-t4 .mc-strip { background: #ea5455; }
+/* Left color strip — hidden */
+.mc-strip { display: none; }
 
 /* Body: value+tier row + micro grid */
 .mc-body {
@@ -784,10 +778,7 @@ td.cell-hl {
   border-right: 1px solid var(--pcv-divider);
 }
 .mc-gcol:last-child { border-right: none; }
-/* Active column: matches activeBenchmark */
-.mc-gcol.active-col { background: rgba(2,83,182,0.05); }
 .mc-gcol-lbl  { font-size: 9px; font-weight: 600; color: #B2B2B8; letter-spacing: 0.3px; line-height: 1; }
-.mc-gcol.active-col .mc-gcol-lbl { color: var(--pcv-brand); }
 .mc-gcol-val  { font-size: 11px; font-weight: 600; color: var(--pcv-text-opt); line-height: 1; }
 .mc-gcol-d    { font-size: 10px; font-weight: 500; display: flex; align-items: center; gap: 1px; line-height: 1; }
 .mc-gcol-d.pos { color: var(--pcv-success); }
@@ -1578,30 +1569,27 @@ function metricCellHTML(m, def, adType) {
   const { val, p50 } = m[def.key];
   const p25 = p50 * 0.75, p75 = p50 * 1.25;
   const tier = getTier(val, p50);
-  // Highlight the grid column that matches the active benchmark
-  const actCol = activeBenchmark; // 'P25' | 'P50' | 'P75'
   return `<td class="td-m ${adType}-col${fc} has-${tier}" data-tier="${tier}"
       data-val="${val}" data-p50="${p50}" data-good="${def.good}"
       data-label="${def.label}" data-adtype="${adType.toUpperCase()}">
     <div class="m-cell">
-      <div class="mc-strip"></div>
       <div class="mc-body">
         <div class="mc-row1">
           <span class="mc-val">${def.fmt(val)}</span>
           <span class="mc-tier tier-${tier}">${TIER_LABEL[tier]}</span>
         </div>
         <div class="mc-grid">
-          <div class="mc-gcol${actCol==='P25'?' active-col':''}">
+          <div class="mc-gcol">
             <span class="mc-gcol-lbl">P25</span>
             <span class="mc-gcol-val">${def.fmt(p25)}</span>
             ${gColDelta(val, p25, def.good)}
           </div>
-          <div class="mc-gcol${actCol==='P50'?' active-col':''}">
+          <div class="mc-gcol">
             <span class="mc-gcol-lbl">P50</span>
             <span class="mc-gcol-val">${def.fmt(p50)}</span>
             ${gColDelta(val, p50, def.good)}
           </div>
-          <div class="mc-gcol${actCol==='P75'?' active-col':''}">
+          <div class="mc-gcol">
             <span class="mc-gcol-lbl">P75</span>
             <span class="mc-gcol-val">${def.fmt(p75)}</span>
             ${gColDelta(val, p75, def.good)}
