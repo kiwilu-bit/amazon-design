@@ -1,0 +1,3988 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  Brand Benchmark  ·  Version 3.0                                    ║
+  ║  Updated: 2026-05-18                                                ║
+  ║                                                                      ║
+  ║  【518 最新首页版本 · 等待确认】                                        ║
+  ║  此版本为 2026-05-18 提交评审的首页设计，一旦确认将转为正式版本。          ║
+  ║                                                                      ║
+  ║  v3.0 升级说明（相较 v2.0）：                                          ║
+  ║  · 单元格重新按 Figma 1040:26391 1比1 还原：                           ║
+  ║    行1：数值（16px/600）+ Tier badge（10px/600）左侧 + VS Pxx 右侧     ║
+  ║    行2：P25 / P50 / P75 三列基准值（12px/600）                        ║
+  ║  · 上下箭头替换为官方 Pacvue 下降.svg 图标                              ║
+  ║  · Hover 浮窗按 Figma 1029:55335 实现：                               ║
+  ║    标题行（指标名 + 当前值）、Tier badge、分割线、P25/P50/P75 三行       ║
+  ║    当前 Tier 边界行加粗高亮                                             ║
+  ║  · Distribution 标签未选中态去除边框                                    ║
+  ║  · 筛选栏移除 Benchmark 下拉选择器                                      ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en" data-theme="blue">
+<head>
+<meta charset="UTF-8">
+<title>Brand Benchmark v1.0 — Pacvue</title>
+<style>
+/* ── Pacvue Design Tokens ── */
+:root {
+  --pcv-brand:        #0253B6;
+  --pcv-brand-rgb:    2, 83, 182;
+  --pcv-nav-bg:       #12143C;
+  --pcv-hover-bg:     rgba(2,83,182,0.04);
+  --pcv-selected-bg:  rgba(2,83,182,0.06);
+  --pcv-success:      #28C76F;
+  --pcv-warning:      #FF9F43;
+  --pcv-error:        #EA5455;
+  --pcv-text-primary: #45464f;
+  --pcv-surface:      #FFFFFF;
+  --pcv-border:       #DEDFE3;
+  --pcv-bg:           #F2F3F6;
+  --pcv-divider:      #EDEEF1;
+  --pcv-text-sec:     #66666c;
+  --pcv-text-dis:     #B2B2B8;
+  --pcv-text-opt:     #82858B;
+  --radius-sm:        4px;
+  --radius-md:        6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--pcv-bg);
+  color: var(--pcv-text-primary);
+  font-size: 14px;
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ─────────────────── SIDEBAR ─────────────────── */
+.sidebar {
+  width: 62px; min-height: 100vh; flex-shrink: 0;
+  background: #12143C;
+  box-shadow: 2px 0 2px rgba(0,0,0,0.17);
+  position: fixed; left: 0; top: 0; bottom: 0; z-index: 300;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 12px 8px; gap: 12px;
+}
+.sidebar-logo {
+  width: 38px; height: 38px; flex-shrink: 0; position: relative;
+}
+.sidebar-logo img { width: 38px; height: 38px; display: block; }
+.sidebar-logo .logo-mark {
+  position: absolute; left: 6.5px; top: 6.93px;
+  width: 25px; height: 24.4px;
+}
+.sidebar-logo .logo-mark img { width: 100%; height: 100%; display: block; }
+.sidebar-nav {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  flex: 1; width: 46px;
+}
+.sidebar-icon {
+  width: 46px; height: 46px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 2px; transition: background 0.15s; flex-shrink: 0;
+}
+.sidebar-icon img { width: 20px; height: 20px; display: block; opacity: 0.75; }
+.sidebar-icon:hover  { background: rgba(242,246,251,0.08); }
+.sidebar-icon:hover img { opacity: 1; }
+.sidebar-icon.active { background: rgba(102,168,255,0.15); }
+.sidebar-icon.active img { opacity: 1; filter: brightness(0) saturate(100%) invert(62%) sepia(69%) saturate(400%) hue-rotate(187deg) brightness(105%); }
+
+/* ─────────────────── PAGE SHELL ─────────────────── */
+.page-shell {
+  margin-left: 62px;
+  width: calc(100vw - 62px);
+  display: flex; flex-direction: column; min-height: 100vh;
+}
+
+/* ─────────────────── TOP NAV ─────────────────── */
+/* ── Top Nav (Figma: node 1013-38779) ─────────────────────────────────────── */
+.top-nav {
+  height: 56px; background: #0253B6;
+  padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200; flex-shrink: 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+/* Left */
+.tn-left { display: flex; align-items: center; gap: 20px; }
+.tn-platform {
+  display: flex; align-items: center; gap: 8px;
+  padding: 3px 0;
+}
+.tn-amazon-logo { display: flex; align-items: center; flex-shrink: 0; }
+.tn-amazon-logo img { width: 75.6px; height: 36px; object-fit: contain; display: block; }
+.tn-chevron { color: white; opacity: 0.85; display: flex; align-items: center; }
+.tn-workspace-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: white; border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 29px; padding: 2px 8px 2px 6px; height: 24px;
+}
+.tn-workspace-pill img { width: 16px; height: 16px; display: block; }
+.tn-workspace-pill span {
+  font-size: 12px; font-weight: 500; color: #66666c; white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+}
+/* Right */
+.tn-right { display: flex; align-items: center; gap: 20px; }
+.tn-globe { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+.tn-globe img { width: 28px; height: 28px; }
+.tn-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; opacity: 0.9; }
+.tn-icon img { width: 20px; height: 20px; }
+.tn-icon svg { width: 20px; height: 20px; fill: white; }
+.tn-user {
+  display: flex; align-items: center; gap: 2px; cursor: pointer;
+}
+.tn-user-name {
+  font-size: 14px; font-weight: 700; color: white; white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+}
+.tn-user-chevron { display: flex; align-items: center; color: white; opacity: 0.85; }
+.tn-divider {
+  width: 1px; height: 28px; background: rgba(255,255,255,0.3);
+}
+.tn-bell-wrap { position: relative; display: flex; align-items: center; }
+.tn-bell-dot {
+  position: absolute; top: -1px; right: -1px;
+  width: 6px; height: 6px; border-radius: 50%; background: #EA5455;
+  border: 1px solid #0253B6;
+}
+
+/* legacy - keep for other elements that may reference */
+.tn-spacer { flex: 1; }
+.tn-date {
+  font-size: 13px; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 6px;
+}
+.tn-btn {
+  width: 28px; height: 28px; border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.12); color: white; border: none;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background 0.15s;
+}
+.tn-btn:hover { background: rgba(255,255,255,0.2); }
+.tn-btn svg  { width: 16px; height: 16px; }
+
+/* ─────────────────── BREADCRUMB BAR ─────────────────── */
+.breadcrumb-bar {
+  height: 56px; background: #ffffff;
+  padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 56px; z-index: 100; flex-shrink: 0;
+  box-shadow: 0 2px 2px rgba(228,228,228,0.5);
+}
+/* Left */
+.bc-left { display: flex; align-items: center; gap: 8px; }
+.bc-title {
+  font-size: 20px; font-weight: 500; color: #5e5873;
+  font-family: 'Inter', sans-serif; white-space: nowrap; line-height: 24px;
+}
+.bc-star { width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; }
+.bc-star img { width: 24px; height: 24px; }
+/* Right */
+.bc-right { display: flex; align-items: center; gap: 16px; }
+.bc-period {
+  width: 240px; height: 36px;
+  background: #ffffff; border: 1px solid #DEDFE3; border-radius: 6px;
+  padding: 0 12px; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+}
+.bc-period-left { display: flex; align-items: center; gap: 12px; }
+.bc-period-label {
+  font-size: 14px; font-weight: 500; color: #45464f;
+  font-family: 'Inter', sans-serif; line-height: 20px; white-space: nowrap;
+}
+.bc-period-chevron img { width: 20px; height: 20px; display: block; }
+.bc-period-divider { width: 1px; height: 16px; background: #DEDFE3; }
+.bc-period-week {
+  font-size: 14px; font-weight: 400; color: #B2B2B8;
+  font-family: 'Inter', sans-serif; line-height: 20px; white-space: nowrap;
+}
+.bc-period-cal img { width: 20px; height: 20px; display: block; }
+.bc-download {
+  width: 36px; height: 36px;
+  border: 1px solid #DEDFE3; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; background: #ffffff;
+}
+.bc-download img { width: 20px; height: 20px; display: block; }
+/* legacy */
+.bc-spacer  { flex: 1; }
+
+/* ─────────────────── FILTER BAR ─────────────────── */
+.filter-bar {
+  padding: 16px 24px;
+  border-bottom: none;
+  background: #ffffff;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; flex-shrink: 0;
+}
+.filter-bar-left  { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.filter-bar-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+/* Filter condition box: Label | Value ▾ — Figma 999:19044 */
+.filter-cond {
+  height: 36px; width: 280px;
+  border: 1px solid #DEDFE3; border-radius: 6px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px;
+  background: #ffffff; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.filter-cond:hover { border-color: var(--pcv-brand); }
+.fc-inner {
+  display: flex; align-items: center; gap: 12px;
+  flex: 1; min-width: 0;
+}
+.fc-label {
+  font-size: 14px; font-weight: 500;
+  color: #45464f; white-space: nowrap; flex-shrink: 0;
+  line-height: 20px;
+}
+.fc-divider { width: 1px; height: 16px; background: #DEDFE3; flex-shrink: 0; }
+.fc-value {
+  flex: 1; min-width: 0;
+  font-size: 14px; font-weight: 400; color: #B2B2B8;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 20px;
+}
+.fc-arrow { flex-shrink: 0; display: flex; align-items: center; width: 20px; height: 20px; }
+.fc-arrow img { width: 20px; height: 20px; display: block; }
+
+/* All/SB/SD/SP segmented group — Figma 999:19070
+   Each button carries its own 1px border; adjacent borders overlap via -1px margin */
+.filter-seg {
+  display: flex; align-items: center;
+  height: 36px; flex-shrink: 0;
+}
+.seg-btn {
+  height: 36px; padding: 8px 16px;
+  font-size: 14px; font-weight: 500; color: #66666c;
+  letter-spacing: 0.4px;
+  background: #ffffff;
+  border: 1px solid #DEDFE3;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+}
+.seg-btn + .seg-btn { margin-left: -1px; }
+.seg-btn:first-child { border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+.seg-btn:last-child  { border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
+.seg-btn:hover { color: var(--pcv-brand); z-index: 1; }
+.seg-btn.active {
+  background: #D9E5F4;
+  border-color: #0253B6;
+  color: #0253B6;
+  z-index: 2;
+}
+/* Search button — Figma 1029:55308 */
+.btn-search {
+  height: 36px; padding: 7px 12px;
+  background: var(--pcv-brand); border-radius: 6px;
+  color: #FBFBFB; font-size: 14px; font-weight: 500;
+  line-height: 20px;
+  border: none; cursor: pointer; display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0; transition: opacity 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-search:hover { opacity: 0.9; }
+.btn-search svg { width: 20px; height: 20px; display: block; }
+/* Clear / Trash button — Figma 1029:55313 */
+.btn-clear {
+  width: 36px; height: 36px; padding: 7px;
+  border: 1px solid #DEDFE3; border-radius: 6px;
+  background: #ffffff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.15s; color: #66666c;
+}
+.btn-clear:hover { border-color: var(--pcv-brand); color: var(--pcv-brand); }
+.btn-clear svg { width: 20px; height: 20px; display: block; }
+.bc-actions { display: flex; align-items: center; gap: 8px; }
+.bc-btn-icon {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  border: 1px solid var(--pcv-border); background: var(--pcv-surface);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  color: var(--pcv-text-sec); transition: all 0.15s;
+}
+.bc-btn-icon:hover { border-color: var(--pcv-brand); color: var(--pcv-brand); }
+.bc-btn-icon svg { width: 16px; height: 16px; }
+
+/* ─────────────────── CONTENT AREA ─────────────────── */
+.content { flex: 1; padding: 16px 24px 32px; display: flex; flex-direction: column; gap: 16px; }
+
+/* Filter as standalone card — Figma 999:19039 */
+.filter-card {
+  background: var(--pcv-surface);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ─────────────────── CTRL CARD (toolbar + distribution) ─────────────────── */
+.ctrl-card {
+  background: var(--pcv-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--pcv-divider);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+/* ─────────────────── TABLE CARD ─────────────────── */
+.table-card {
+  background: var(--pcv-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--pcv-divider);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+/* ─────────────────── TOOLBAR ─────────────────── */
+.toolbar {
+  height: 68px; min-height: 68px;
+  padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
+  border-bottom: 1px solid var(--pcv-divider);
+  flex-shrink: 0;
+}
+.tb-sep { width: 1px; height: 24px; background: #D2D4D9; flex-shrink: 0; }
+.tb-label { font-size: 12px; color: var(--pcv-text-opt); font-weight: 500; white-space: nowrap; }
+
+/* Ad type toggles — kept for reference but no longer rendered */
+.adtype-grp { display: none; }
+.at-toggle {
+  display: flex; align-items: center; gap: 5px;
+  height: 28px; padding: 0 10px;
+  border-radius: 999px; border: 1.5px solid var(--pcv-border);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  background: var(--pcv-surface); transition: all 0.15s;
+  color: var(--pcv-text-opt);
+}
+.at-toggle.on { background: var(--pcv-surface); border-color: var(--pcv-text-primary); color: var(--pcv-text-primary); }
+.at-toggle:not(.on) { opacity: 0.45; }
+.at-toggle:not(.on):hover { opacity: 0.8; }
+.at-check { font-size: 9px; }
+
+/* Depth buttons */
+.depth-grp { display: flex; gap: 4px; }
+
+/* Text buttons */
+.txt-btn {
+  font-size: 12px; color: var(--pcv-brand); cursor: pointer;
+  border: none; background: none; padding: 0; font-family: inherit;
+  font-weight: 500; white-space: nowrap;
+}
+.txt-btn:hover { text-decoration: underline; }
+
+.tb-count {
+  margin-left: auto; font-size: 12px; color: var(--pcv-text-opt); white-space: nowrap;
+}
+.tb-count strong { color: var(--pcv-text-primary); font-weight: 600; }
+
+/* Hide columns via class on table */
+/* Toolbar toggle: hide everything including group header */
+.hide-sp .sp-col, .hide-sp .th-sp-group { display: none; }
+.hide-sb .sb-col, .hide-sb .th-sb-group { display: none; }
+.hide-sd .sd-col, .hide-sd .th-sd-group { display: none; }
+
+
+/* ─────────────────── BRAND HEADER ─────────────────── */
+.brand-header {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 0;
+  border-bottom: 1px solid var(--pcv-divider);
+  flex-shrink: 0;
+  gap: 12px;
+}
+.brand-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--pcv-text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.profile-tabs {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.profile-tab {
+  height: 34px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pcv-text-sec);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.profile-tab:hover {
+  color: var(--pcv-text-primary);
+}
+.profile-tab.active {
+  color: var(--pcv-brand);
+  border-bottom-color: var(--pcv-brand);
+}
+.brand-profile-label {
+  font-size: 13px;
+  color: var(--pcv-text-sec);
+  font-weight: 400;
+  padding-bottom: 12px;
+  align-self: flex-end;
+}
+
+/* ─────────────────── TABLE SCROLL WRAP ─────────────────── */
+.table-scroll {
+  overflow-x: auto; overflow-y: visible; flex: 1;
+}
+.table-scroll::-webkit-scrollbar { height: 6px; }
+.table-scroll::-webkit-scrollbar-thumb { background: #D2D4D9; border-radius: 3px; }
+
+/* ─────────────────── MATRIX TABLE ─────────────────── */
+/* MUST use separate to allow ::after sticky shadow */
+.matrix {
+  border-collapse: separate; border-spacing: 0;
+  width: max-content; min-width: 100%;
+}
+.matrix thead {
+  position: sticky; top: 0; z-index: 10;
+}
+.matrix th, .matrix td {
+  border-bottom: 1px solid var(--pcv-divider);
+}
+
+/* === GROUP HEADER ROW === */
+/* Shared styles for both first-column header cells */
+.th-cat-group,
+.th-cat-depth {
+  width: 300px; min-width: 300px;
+  background: var(--pcv-surface);
+  position: sticky; left: 0; z-index: 12;
+  border-right: 1px solid var(--pcv-divider);
+}
+/* Row 1: "Category Layer ⓘ" title cell */
+.th-cat-group {
+  border-bottom: 1px solid var(--pcv-divider);
+  padding: 0 16px;
+  height: 36px;
+  vertical-align: middle;
+}
+/* Row 2: L1/L2/L3/L4 depth cell — aligns with CTR/CPC etc. */
+.th-cat-depth {
+  border-bottom: 1px solid var(--pcv-divider);
+  padding: 0 12px;
+  height: 48px;
+  vertical-align: middle;
+}
+.cat-header-title {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 14px; font-weight: 500; color: #45464f; line-height: 20px;
+}
+.cat-header-info {
+  display: flex; align-items: center; color: #B2B2B8;
+}
+.cat-header-info svg { width: 16px; height: 16px; display: block; }
+.cat-depth-row {
+  display: flex; align-items: center; gap: 0;
+}
+.cat-depth-sep {
+  font-size: 12px; color: #B2B2B8; padding: 0 4px; user-select: none;
+}
+/* Depth badge button — Category Layer header only */
+.cat-depth-btn {
+  display: inline-flex; align-items: center; gap: 3px;
+  height: 18px; padding: 2px 6px;
+  border-radius: 5px; border: 1.5px solid transparent;
+  font-size: 10px; font-weight: 600; line-height: 1;
+  background: #F2F3F6; color: #66666c; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  user-select: none;
+}
+.cat-depth-btn:hover { background: #E8E9ED; }
+.cat-depth-btn.active {
+  background: #D9E5F4; color: var(--pcv-brand);
+  border-color: var(--pcv-brand);
+}
+/* Fixed column right shadow (Pacvue spec) */
+.th-cat-group::after,
+.th-cat-depth::after,
+.td-cat::after {
+  content: '';
+  position: absolute; top: 0; right: -1px; bottom: -1px;
+  width: 10px;
+  pointer-events: none;
+  box-shadow: 10px 0 14px 0 rgba(0,0,0,0.06);
+  clip-path: inset(0 -20px 0 0);
+}
+
+/* Option A — Line Separator: plain white bg, thick left border as group divider */
+.th-sp-group { background: var(--pcv-surface); border-bottom: 2px solid var(--pcv-divider); }
+.th-sb-group { background: var(--pcv-surface); border-bottom: 2px solid var(--pcv-divider); border-left: 2px solid var(--pcv-border); }
+.th-sd-group { background: var(--pcv-surface); border-bottom: 2px solid var(--pcv-divider); border-left: 2px solid var(--pcv-border); }
+
+.group-label {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 12px; height: 36px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--pcv-text-primary);
+}
+.group-badge { display: none; }
+.group-name { display: none; }
+
+.th-m.sp-col  { background: var(--pcv-surface); }
+.th-m.sb-col  { background: var(--pcv-surface); }
+.th-m.sd-col  { background: var(--pcv-surface); }
+.th-m         { border-left: 1px solid var(--pcv-divider); }
+.th-m.first-in-group { border-left: 2px solid var(--pcv-border); }
+
+/* === METRIC HEADER ROW === */
+.th-cat-metric {
+  width: 300px; min-width: 300px;
+  padding: 0 16px; height: 48px;
+  font-size: 14px; font-weight: 500;
+  color: var(--pcv-text-primary);
+  background: var(--pcv-surface);
+  text-align: left; vertical-align: middle;
+  position: sticky; left: 0; z-index: 12;
+  border-right: 1px solid var(--pcv-divider);
+  border-bottom: 1px solid #EDEEF1;
+}
+.th-m {
+  min-width: 260px; width: 260px;
+  height: 48px; padding: 0;
+  font-size: 12px; font-weight: 500;
+  color: #45464f;
+  text-align: left; vertical-align: middle;
+  background: var(--pcv-surface);
+  border-bottom: 1px solid #EDEEF1;
+}
+.th-m { border-left: 1px solid var(--pcv-divider); }
+
+/* Metric header inner layout */
+.th-m-inner {
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 0 12px 0 16px;
+  height: 100%; gap: 4px; cursor: default; user-select: none;
+}
+.th-label { flex: 1; min-width: 0; white-space: normal; line-height: 1.3; }
+
+/* Sort icon: 12×24px frame, two stacked arrows */
+.sort-icon {
+  flex-shrink: 0; width: 12px; height: 24px;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 1px; opacity: 0.4;
+  transition: opacity 0.15s;
+}
+.sort-icon svg { display: block; }
+.th-m.sort-asc  .sort-arrow-down,
+.th-m.sort-desc .sort-arrow-up   { opacity: 0; }
+.th-m.sort-asc  .sort-icon,
+.th-m.sort-desc .sort-icon       { opacity: 1; }
+.th-m.sort-asc  .sort-arrow-up   path,
+.th-m.sort-desc .sort-arrow-down path { stroke: var(--pcv-brand); }
+
+/* === DATA ROWS === */
+.data-row { transition: none; }
+
+/* ── Crosshair hover ─────────────────────────────────────── */
+/* Row: top/bottom inset line */
+.row-hl > td {
+  box-shadow: inset 0 1px 0 rgba(2,83,182,0.2), inset 0 -1px 0 rgba(2,83,182,0.2);
+}
+/* Column: left/right inset lines */
+td.col-hl {
+  box-shadow: inset 1px 0 0 rgba(2,83,182,0.2), inset -1px 0 0 rgba(2,83,182,0.2);
+}
+/* Intersection: all four inset lines */
+td.cell-hl {
+  box-shadow:
+    inset 0 1px 0 rgba(2,83,182,0.2),
+    inset 0 -1px 0 rgba(2,83,182,0.2),
+    inset 1px 0 0 rgba(2,83,182,0.2),
+    inset -1px 0 0 rgba(2,83,182,0.2) !important;
+}
+
+/* Name/category cell — sticky left, always on top */
+.td-cat {
+  position: sticky; left: 0; z-index: 3;
+  border-right: 1px solid var(--pcv-divider);
+  padding: 0;
+  min-height: 52px;
+}
+.data-row.l1-row > .td-cat { background: #fafafa; }
+.data-row.l2-row > .td-cat,
+.data-row.l3-row > .td-cat,
+.data-row.l4-row > .td-cat { background: var(--pcv-surface); }
+.data-row:hover > .td-cat {
+  background: color-mix(in srgb, var(--pcv-brand) 4%, #ffffff) !important;
+}
+
+.l1-sep > .td-cat { border-top: 2px solid var(--pcv-divider); }
+.l1-sep > .td-m   { border-top: 2px solid var(--pcv-divider); }
+
+.cat-inner {
+  display: flex; align-items: center;
+  padding: 0 12px; min-height: 52px; gap: 6px;
+}
+.indent-blocks { display: flex; align-items: stretch; flex-shrink: 0; }
+.indent-block { width: 20px; position: relative; }
+.indent-block::after {
+  content: ''; position: absolute; left: 9px; top: 0; bottom: 0;
+  width: 1px; background: var(--pcv-divider);
+}
+.row-toggle {
+  width: 18px; height: 18px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 3px; cursor: pointer; transition: transform 0.18s;
+  color: var(--pcv-text-dis);
+}
+.row-toggle svg { pointer-events: none; }
+.row-toggle.open { transform: rotate(90deg); color: var(--pcv-brand); }
+.row-toggle.leaf { opacity: 0; pointer-events: none; }
+/* Layer icon badges — outlined style: white bg + border, icon & number share same color */
+.l-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  height: 18px; padding: 2px 6px;
+  border-radius: 5px; flex-shrink: 0; white-space: nowrap;
+  font-size: 10px; font-weight: 600; line-height: 1;
+  border: none;
+}
+.lb1, .lb2, .lb3, .lb4 { background: #F2F3F6; color: #66666c; }
+
+/* Depth buttons with layer icons */
+.depth-btn {
+  height: 28px; padding: 0 8px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  font-size: 10px; font-weight: 600; cursor: pointer;
+  background: transparent; color: var(--pcv-text-opt);
+  transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.depth-btn .d-icon {
+  display: inline-flex; align-items: center; gap: 3px;
+  height: 18px; padding: 2px 4px 2px 3px;
+  border-radius: 5px; border: 1.5px solid;
+  font-size: 10px; font-weight: 600; line-height: 1;
+  background: #ffffff;
+}
+.depth-btn .d-icon svg { width: 10px; height: 10px; flex-shrink: 0; }
+.depth-btn[data-d="1"] .d-icon { color: #5C607A; border-color: #C0C3D4; }
+.depth-btn[data-d="2"] .d-icon { color: #6E7189; border-color: #CACDD9; }
+.depth-btn[data-d="3"] .d-icon { color: #7E8197; border-color: #D4D6E2; }
+.depth-btn[data-d="4"] .d-icon { color: #8E91A5; border-color: #DEDFE9; }
+.depth-btn.on  { border-color: var(--pcv-border); background: var(--pcv-surface); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.depth-btn:hover:not(.on) { background: var(--pcv-divider); }
+.cat-name-wrap { flex: 1; min-width: 0; }
+.cat-name {
+  font-size: 14px; font-weight: 400; color: var(--pcv-text-sec);
+  white-space: nowrap;
+}
+.l1-row .cat-name { font-weight: 500; color: var(--pcv-text-primary); }
+.cat-path {
+  font-size: 11px; color: var(--pcv-text-dis);
+  white-space: nowrap; margin-top: 1px;
+}
+
+/* Metric data cell */
+.td-m {
+  width: 260px; min-width: 260px; max-width: 260px;
+  padding: 2px 4px; text-align: left;
+  position: relative; z-index: 0;
+  min-height: 52px;
+}
+.td-m.sp-col, .td-m.sb-col, .td-m.sd-col { background: var(--pcv-surface); }
+.td-m         { border-left: 1px solid var(--pcv-divider); }
+.td-m.first-in-group { border-left: 2px solid var(--pcv-border); }
+
+/* ── Figma-matched cell (node 1040:26443) ────────────────────────────────── */
+.td-m[data-val] { cursor: pointer; }
+.td-m[data-val]:hover .m-cell { background: rgba(2,83,182,0.03); }
+
+/* NE arrow on hover */
+.td-m[data-val]::after {
+  content: ''; position: absolute; top: 5px; right: 6px;
+  width: 14px; height: 14px; background-color: #0253B6;
+  opacity: 0; transition: opacity 0.18s; pointer-events: none;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 11L11 3M11 3H5.5M11 3V8.5' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-size: 14px 14px; mask-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 11L11 3M11 3H5.5M11 3V8.5' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-size: 14px 14px; -webkit-mask-repeat: no-repeat;
+}
+.td-m[data-val]:hover::after { opacity: 0.6; }
+
+/* Cell outer wrapper */
+.m-cell {
+  display: flex; flex-direction: column;
+  gap: 7px; padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  min-height: 62px; cursor: default;
+}
+.m-cell.no-data {
+  justify-content: center; min-height: 44px; padding: 8px 12px;
+}
+.m-cell.no-data .mc-val { font-size: 12px; color: var(--pcv-text-dis); font-weight: 400; }
+
+/* ── Cell: Figma 1040:26391 — 260px ──────────────────────────────────────── */
+
+/* Row 1: left (value+tier) / right (VS label + delta, 2-line column) */
+.mc-row1 {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 8px;
+  height: 26.5px;
+}
+.mc-row1-left { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+/* Value: 16px semibold #45464f */
+.mc-val { font-size: 16px; font-weight: 600; color: #45464f; line-height: 16px; white-space: nowrap; }
+
+/* Tier badge: 10px semibold */
+.mc-tier {
+  font-size: 10px; font-weight: 600; padding: 2px 6px;
+  border-radius: 4px; white-space: nowrap; flex-shrink: 0; line-height: normal;
+}
+.tier-t1 { background: rgba(40,199,111,0.12); color: #1a9e55; }
+.tier-t2 { background: rgba(2,83,182,0.08);   color: #1a5db0; }
+.tier-t3 { background: rgba(255,159,67,0.12); color: #c07400; }
+.tier-t4 { background: rgba(234,84,85,0.10);  color: #c9342e; }
+
+/* VS [tier] — right side: column, 2 rows, right-aligned */
+.mc-vs-next {
+  display: flex; flex-direction: column; align-items: flex-end;
+  justify-content: center; gap: 1px; flex-shrink: 0; height: 100%;
+}
+/* Row 1 of right: "VS P75" label */
+.mc-vs-lbl {
+  font-size: 10px; font-weight: 400; color: #B2B2B8;
+  letter-spacing: 0.3px; white-space: nowrap; line-height: 1.2;
+}
+/* Row 2 of right: "0.7% ↑" value */
+.mc-vs-d {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 12px; font-weight: 400; white-space: nowrap; line-height: 1;
+}
+.mc-vs-d.pos { color: #28C76F; }
+.mc-vs-d.neg { color: #EA5455; }
+.mc-vs-d.neu { color: #B2B2B8; }
+.mc-vs-d svg { flex-shrink: 0; }
+
+/* Row 2: P25 | P50 | P75 — three equal columns, single row */
+.mc-bm-row { display: flex; align-items: center; }
+.mc-bm-col {
+  flex: 1 1 0; display: flex; align-items: center; gap: 4px;
+  padding: 4px 5px 4px 4px;
+  border-right: 1px solid #EDEEF1;
+  min-width: 0;
+}
+.mc-bm-col:first-child { padding-left: 0; }
+.mc-bm-col:last-child  { border-right: none; padding-right: 0; }
+/* P-label + value: 12px semibold #66666c */
+.mc-bm-lbl { font-size: 12px; font-weight: 600; color: #66666c; white-space: nowrap; }
+.mc-bm-val { font-size: 12px; font-weight: 600; color: #66666c; white-space: nowrap; }
+
+/* compat */
+.mc-bm-d { display: flex; align-items: center; gap: 3px; font-size: 12px; white-space: nowrap; }
+.mc-bm-d.pos { color: #28C76F; } .mc-bm-d.neg { color: #EA5455; } .mc-bm-d.neu { color: #B2B2B8; }
+.mc-bm-d svg { flex-shrink: 0; }
+
+/* Keep for tooltip compat */
+.mc-delta { font-size: 11px; font-weight: 500; line-height: 1; display: flex; align-items: center; gap: 2px; }
+.mc-delta.pos { color: var(--pcv-success); }
+.mc-delta.neg { color: var(--pcv-error); }
+.mc-delta.neu { color: var(--pcv-text-dis); }
+.mc-delta svg { flex-shrink: 0; }
+
+/* ─────────────────── LEGEND ─────────────────── */
+.legend {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; color: var(--pcv-text-opt);
+}
+.lg-item { display: flex; align-items: center; gap: 4px; }
+.lg-dot { width: 10px; height: 10px; border-radius: var(--radius-sm); }
+
+/* Focus ring (Pacvue spec) */
+:focus-visible { outline: 2px solid var(--pcv-brand); outline-offset: 2px; }
+
+/* ══════════════════════════════════════════════════════
+   DETAILS SIDE PANEL
+══════════════════════════════════════════════════════ */
+#detail-backdrop {
+  position: fixed; inset: 0; z-index: 5000;
+  background: rgba(0,0,0,0.18);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+#detail-backdrop.open { opacity: 1; pointer-events: all; }
+
+#detail-panel {
+  position: fixed; top: 0; right: 0;
+  width: 1100px; height: 100vh;
+  background: #F2F3F6;
+  z-index: 5001;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  font-family: 'Inter', sans-serif;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.10);
+  overflow: hidden;
+}
+#detail-panel.open { transform: translateX(0); }
+
+/* ── Panel Header ── */
+#dp-header {
+  height: 56px; flex-shrink: 0;
+  background: #fff;
+  border-bottom: 1px solid #EDEEF1;
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 20px;
+}
+#dp-title {
+  font-size: 16px; font-weight: 600; color: #45464f;
+  flex: 1;
+}
+#dp-close {
+  width: 28px; height: 28px;
+  border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #B2B2B8; border-radius: 4px; flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#dp-close:hover { background: #F2F3F6; color: #45464f; }
+#dp-close svg { width: 16px; height: 16px; display: block; }
+
+/* ── Panel Filter Bar ── */
+#dp-filter {
+  height: 52px; flex-shrink: 0;
+  background: #fff;
+  border-bottom: 1px solid #EDEEF1;
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 20px;
+}
+.dp-filter-select {
+  height: 32px; padding: 0 10px;
+  border: 1px solid #DEDFE3; border-radius: 4px;
+  background: #fff; font-size: 13px; color: #45464f;
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; flex-shrink: 0; white-space: nowrap;
+}
+.dp-filter-label { font-size: 12px; color: #B2B2B8; margin-right: 2px; }
+.dp-filter-value { font-size: 13px; font-weight: 500; color: #45464f; }
+.dp-filter-chevron { color: #DEDFE3; margin-left: 4px; }
+.dp-filter-chevron svg { width: 14px; height: 14px; display: block; }
+.dp-filter-sep { width: 1px; height: 20px; background: #EDEEF1; flex-shrink: 0; margin: 0 4px; }
+.dp-seg { display: flex; align-items: center; }
+.dp-seg-btn {
+  height: 32px; padding: 0 12px;
+  font-size: 13px; font-weight: 500; color: #66666c;
+  background: #fff; border: 1px solid #DEDFE3;
+  cursor: pointer; transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+  margin-left: -1px;
+}
+.dp-seg-btn:first-child { border-radius: 4px 0 0 4px; }
+.dp-seg-btn:last-child  { border-radius: 0 4px 4px 0; }
+.dp-seg-btn.active {
+  background: rgba(2,83,182,0.08); color: var(--pcv-brand);
+  border-color: var(--pcv-brand); z-index: 1;
+}
+
+/* ── Panel Scrollable Body ── */
+#dp-body {
+  flex: 1; overflow-y: auto; padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* ── Brand Info + Metrics — Merged Card ── */
+#dp-brand-section {
+  background: #fff; border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  height: 315px;
+  display: flex; flex-direction: column; flex-shrink: 0;
+  overflow: hidden;
+}
+/* SP mode: outer padding, gap, fixed 315px with flex layout */
+#dp-brand-section.sp-mode {
+  padding: 24px; gap: 24px;
+  height: 315px; overflow: hidden;
+}
+.dp-brand-info-hdr {
+  padding: 16px 20px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  border-bottom: 1px solid #F2F3F6;
+  flex-shrink: 0;
+}
+/* SP mode: no outer padding — outer already has 24px, no border */
+#dp-brand-section.sp-mode .dp-brand-info-hdr {
+  padding: 0; border-bottom: none;
+  flex-direction: column; gap: 10px;
+}
+#dp-brand-name {
+  font-size: 20px; font-weight: 500; color: #5e5873; line-height: 28px;
+}
+#dp-brand-cat { font-size: 13px; color: var(--pcv-brand); font-weight: 400; }
+/* Breadcrumb */
+.dp-brand-breadcrumb { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+.dp-bc-link  { color: var(--pcv-brand); font-size: 16px; font-weight: 400; white-space: nowrap; }
+.dp-bc-sep   { color: #B2B2B8; font-size: 14px; }
+.dp-bc-dim   { color: #B2B2B8; font-size: 16px; display: flex; align-items: center; gap: 0; }
+.dp-bc-dim svg { width: 16px; height: 16px; flex-shrink: 0; }
+/* Brand + Meta row */
+.dp-brand-top-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.dp-brand-meta-sp {
+  display: flex; align-items: center; gap: 8px; font-size: 14px; flex-shrink: 0;
+}
+.dp-meta-lbl { color: #B2B2B8; }
+.dp-meta-val { color: #45464f; }
+.dp-meta-vsep { width: 1px; height: 14px; background: #EDEEF1; }
+.dp-meta-info-icon { width: 18px; height: 18px; color: #B2B2B8; display: inline-flex; align-items: center; }
+/* Old meta (SB/SD) */
+#dp-brand-meta { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+.dp-meta-item { font-size: 12px; color: #82858b; }
+.dp-meta-item b { font-weight: 600; color: #45464f; }
+
+/* ── SP nested Efficiency card ── */
+.dp-sp-eff-card {
+  background: #fff; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  overflow: hidden; flex-shrink: 0;
+}
+.dp-sp-eff-hdr {
+  background: rgba(115,103,240,0.15);
+  padding: 8px 16px;
+  font-size: 16px; font-weight: 500; color: #66666c; line-height: 22px;
+}
+.dp-sp-eff-body {
+  padding: 20px 16px;
+  display: flex; gap: 40px; align-items: flex-start;
+  overflow-x: auto; overflow-y: hidden;
+}
+.dp-sp-eff-body::-webkit-scrollbar { height: 3px; }
+.dp-sp-eff-body::-webkit-scrollbar-thumb { background: #DEDFE3; border-radius: 2px; }
+
+/* Metric groups container (scrollable — SB/SD) */
+.dp-metric-groups {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+}
+/* In SP mode, the metric-groups just sizes to content */
+#dp-brand-section.sp-mode .dp-metric-groups {
+  flex: none; overflow: visible;
+}
+
+/* Single metric group */
+.dp-metric-group { flex-shrink: 0; }
+.dp-metric-group + .dp-metric-group { border-top: 1px solid #F2F3F6; }
+.dp-metric-group-hdr {
+  padding: 8px 16px;
+  font-size: 13px; font-weight: 500; color: #45464f;
+  flex-shrink: 0;
+}
+.dp-mg-purple { background: rgba(115,103,240,0.12); }
+.dp-mg-blue   { background: rgba(2,83,182,0.06); }
+.dp-mg-green  { background: rgba(40,199,111,0.08); }
+
+/* Horizontal scroll metric row */
+.dp-metric-row {
+  display: flex; flex-wrap: nowrap; align-items: flex-start;
+  overflow-x: auto; overflow-y: hidden;
+  padding: 16px 16px 16px;
+  gap: 0;
+  scrollbar-width: thin; scrollbar-color: #DEDFE3 transparent;
+}
+.dp-metric-row::-webkit-scrollbar { height: 4px; }
+.dp-metric-row::-webkit-scrollbar-thumb { background: #DEDFE3; border-radius: 2px; }
+/* Per-metric block — fixed width, vertical divider */
+.dp-metric-block {
+  min-width: 220px; display: flex; flex-direction: column; gap: 8px;
+  flex-shrink: 0;
+  padding-right: 20px; margin-right: 20px;
+  border-right: 1px solid #EDEEF1;
+}
+.dp-metric-block:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+.dp-metric-label-row {
+  display: flex; align-items: center; gap: 4px;
+}
+.dp-metric-label {
+  font-size: 16px; font-weight: 500; color: #45464f; line-height: 20px;
+}
+.dp-metric-info {
+  width: 16px; height: 16px; color: #B2B2B8;
+  display: flex; align-items: center;
+}
+.dp-metric-info svg { width: 16px; height: 16px; }
+.dp-metric-value-row {
+  display: flex; align-items: center; gap: 6px;
+}
+.dp-metric-value {
+  font-size: 14px; font-weight: 700; color: #45464f; line-height: 16px;
+}
+/* Reuse existing tier badge styles */
+.dp-tier-badge {
+  font-size: 12px; font-weight: 600;
+  padding: 2px 6px; border-radius: 4px; white-space: nowrap;
+}
+.dp-tier-badge.tier-t1 { background: rgba(40,199,111,0.12);  color: #1a9e55; }
+.dp-tier-badge.tier-t2 { background: rgba(2,83,182,0.08);    color: #1a5db0; }
+.dp-tier-badge.tier-t3 { background: rgba(255,159,67,0.12);  color: #c07400; }
+.dp-tier-badge.tier-t4 { background: rgba(234,84,85,0.10);   color: #c9342e; }
+/* P25 | P50 | P75 | Last columns — never wrap */
+.dp-bm-cols {
+  display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;
+}
+.dp-bm-col {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 4px 9px 4px 0;
+  border-right: 1px solid #EDEEF1;
+}
+.dp-bm-col:last-child { border-right: none; padding-right: 0; }
+.dp-bm-top {
+  display: flex; align-items: center; gap: 4px;
+}
+.dp-bm-lbl { font-size: 12px; font-weight: 600; color: #66666c; }
+.dp-bm-val { font-size: 12px; font-weight: 600; color: #66666c; }
+.dp-bm-bot {
+  display: flex; align-items: center; gap: 4px;
+}
+.dp-bm-delta { font-size: 12px; font-weight: 400; display: flex; align-items: center; gap: 3px; }
+.dp-bm-delta.pos { color: #28C76F; }
+.dp-bm-delta.neg { color: #EA5455; }
+.dp-bm-delta.neu { color: #B2B2B8; }
+.dp-bm-delta svg { flex-shrink: 0; }
+
+/* ── Trend Performance Section ── */
+.dp-section-flat {
+  background: #fff; border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  overflow: hidden;
+  height: 600px;
+  display: flex; flex-direction: column; flex-shrink: 0;
+}
+.dp-section-flat-hdr {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px 12px; border-bottom: 1px solid #F2F3F6;
+  flex-shrink: 0;
+}
+.dp-section-flat-title {
+  font-size: 15px; font-weight: 600; color: #45464f; flex: 1;
+}
+.dp-insights-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 28px; padding: 0 12px;
+  background: rgba(40,199,111,0.08); color: #1a9e55;
+  border: 1px solid rgba(40,199,111,0.25); border-radius: 4px;
+  font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;
+}
+.dp-metric-toggle { display: flex; gap: 6px; }
+.dp-metric-toggle-btn {
+  height: 28px; padding: 0 10px;
+  background: #F2F3F6; color: #66666c;
+  border: 1px solid transparent; border-radius: 4px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.15s;
+}
+.dp-metric-toggle-btn.active {
+  background: rgba(2,83,182,0.08); color: var(--pcv-brand);
+  border-color: rgba(2,83,182,0.2);
+}
+/* ── Trend Performance redesign (Figma 1048:41731) ── */
+#dp-trend-section {
+  flex-direction: row !important;
+  padding: 24px !important; gap: 18px !important;
+  height: auto !important; overflow: visible;
+}
+.dp-trend-left {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px;
+}
+.dp-trend-hdr {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0;
+}
+.dp-trend-title {
+  font-size: 18px; font-weight: 600; color: #45464f; white-space: nowrap;
+}
+.dp-trend-ctrls { display: flex; gap: 8px; align-items: center; }
+.dp-trend-metric-dd {
+  height: 36px; padding: 0 10px 0 12px;
+  border: 1px solid #DEDFE3; border-radius: 4px; background: #fff;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; position: relative; user-select: none;
+}
+.dp-trend-metric-dd-label { font-size: 14px; font-weight: 500; color: #45464f; white-space: nowrap; }
+.dp-trend-metric-dd-sep   { width: 1px; height: 16px; background: #DEDFE3; }
+.dp-trend-metric-dd-val   { font-size: 14px; color: #B2B2B8; flex: 1; white-space: nowrap; }
+.dp-trend-metric-dd-arrow { color: #DEDFE3; flex-shrink: 0; display: flex; }
+.dp-trend-metric-dd:hover .dp-trend-metric-dd-arrow { color: var(--pcv-brand); }
+.dp-trend-metric-menu {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: #fff; border: 1px solid #DEDFE3; border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); z-index: 30; overflow: hidden;
+}
+.dp-trend-metric-menu.open { display: block; }
+.dp-trend-metric-menu-item {
+  padding: 8px 12px; font-size: 14px; color: #45464f; cursor: pointer; white-space: nowrap;
+}
+.dp-trend-metric-menu-item:hover { background: #F2F6FB; }
+.dp-trend-metric-menu-item.active { color: var(--pcv-brand); font-weight: 500; }
+.dp-trend-date-btn {
+  height: 36px; width: 240px; padding: 0 12px;
+  border: 1px solid #DEDFE3; border-radius: 4px; background: #fff;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  cursor: pointer; font-size: 14px; color: #66666c;
+}
+.dp-chart-wrap {
+  position: relative; overflow: hidden;
+  height: 360px; flex-shrink: 0;
+}
+.dp-chart-wrap svg { display: block; width: 100%; height: 100%; }
+.dp-trend-legend {
+  display: flex; justify-content: center; gap: 32px; flex-shrink: 0; padding: 2px 0;
+}
+.dp-trend-legend-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; color: #66666c; position: relative;
+}
+.dp-legend-user-line {
+  position: relative; width: 12px; height: 0; border-top: 2px solid #7367F0; flex-shrink: 0;
+}
+.dp-legend-user-line::after {
+  content: ''; position: absolute; width: 7px; height: 7px;
+  background: #7367F0; border-radius: 50%;
+  top: -5.5px; left: 2.5px; border: 1.5px solid #fff; box-shadow: 0 0 0 1px #7367F0;
+}
+.dp-legend-band-blue   { width: 12px; height: 6px; background: rgba(27,93,176,0.5); flex-shrink: 0; }
+.dp-legend-band-orange { width: 12px; height: 6px; background: rgba(255,159,67,0.5); flex-shrink: 0; }
+/* Insights panel */
+.dp-insights-panel {
+  width: 243px; flex-shrink: 0; background: #fff; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex; flex-direction: column; overflow: hidden;
+  align-self: flex-start;
+}
+.dp-insights-hdr {
+  background: #D9E5F4; padding: 8px 16px;
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+}
+.dp-insights-title { font-size: 18px; font-weight: 500; color: var(--pcv-brand); white-space: nowrap; }
+.dp-insights-body {
+  padding: 16px; display: flex; flex-direction: column; gap: 10px;
+  flex: 1; overflow-y: auto;
+}
+.dp-insight-chip {
+  background: #F2F6FB; border-radius: 4px; padding: 4px 9px;
+  font-size: 14px; font-weight: 500; color: var(--pcv-brand); line-height: 20px;
+}
+.dp-insight-desc { font-size: 14px; font-weight: 400; color: #66666c; line-height: 20px; }
+/* Chart hover tooltip */
+.dp-chart-tt {
+  position: absolute; background: #fff; border: 1px solid #EDEEF1; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  padding: 10px 12px; pointer-events: none; z-index: 10;
+  font-size: 12px; color: #45464f; min-width: 160px;
+}
+.dp-chart-tt-date { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.dp-chart-tt-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 3px; }
+.dp-chart-tt-lbl { color: #82858b; }
+.dp-chart-tt-val { font-weight: 600; }
+.dp-chart-tt-val.user { color: #7367F0; }
+
+/* ── Brand Distribution Redesign (Figma 1048:41824) ── */
+#dp-dist-section {
+  padding: 16px 0 20px !important; gap: 20px !important;
+  height: auto !important; overflow: visible;
+}
+#dp-dist-section .dp-section-flat-hdr {
+  border-bottom: none !important; padding: 0 24px !important;
+}
+/* Dist metric dropdown (matches Trend style) */
+.dp-dist-dd {
+  height: 36px; padding: 0 10px 0 12px;
+  border: 1px solid #DEDFE3; border-radius: 4px; background: #fff;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; user-select: none; min-width: 200px;
+}
+.dp-dist-dd-label { font-size: 14px; font-weight: 500; color: #45464f; white-space: nowrap; }
+.dp-dist-dd-val   { font-size: 14px; color: #B2B2B8; flex: 1; }
+/* Matrix table */
+#dp-dist-matrix { overflow-x: auto; overflow-y: visible; }
+.bd-matrix {
+  border-collapse: separate; border-spacing: 0;
+  width: 100%; table-layout: fixed;
+}
+.bd-matrix th, .bd-matrix td { text-align: left; }
+/* Left col header — fixed 160px, sticky */
+.bd-hdr-pv {
+  background: #F8F8F8; height: 48px; padding: 0 16px 0 24px;
+  border-top: 1px solid #EDEEF1; border-bottom: 1px solid #EDEEF1;
+  border-right: 1px solid #EDEEF1;
+  font-size: 14px; font-weight: 600; color: #45464f;
+  white-space: nowrap; vertical-align: middle;
+  width: 188px;
+  position: sticky; left: 0; z-index: 3;
+}
+/* Metric col headers — auto equal share of remaining space */
+.bd-hdr-metric {
+  background: #F8F8F8; height: 48px; padding: 0 12px;
+  border-top: 1px solid #EDEEF1; border-bottom: 1px solid #EDEEF1;
+  border-left: 1px solid #EDEEF1;
+  font-size: 14px; font-weight: 600; color: #45464f;
+  text-align: center; vertical-align: middle; white-space: nowrap;
+}
+/* Left tier cell — fixed 188px × 80px, sticky, vertically centered */
+.bd-cell-pv {
+  height: 80px; padding: 0 16px 0 24px;
+  border-bottom: 1px solid #EDEEF1; border-right: 1px solid #EDEEF1;
+  vertical-align: middle; background: #fff;
+  width: 188px;
+  position: sticky; left: 0; z-index: 2;
+}
+/* Metric data cell — auto equal width, auto height */
+.bd-cell-metric {
+  min-height: 80px; padding: 12px;
+  border-bottom: 1px solid #EDEEF1; border-left: 1px solid #EDEEF1;
+  vertical-align: top; background: #fff; text-align: center;
+}
+/* Tier label badges */
+.bd-tier-badge {
+  display: inline-flex; align-items: center; padding: 4px 8px;
+  border-radius: 4px; font-size: 14px; font-weight: 600; white-space: nowrap;
+}
+.bd-t1 { background: #E4F5EB; color: #1C9E55; }
+.bd-t2 { background: #E8EEF7; color: #1B5DB0; }
+.bd-t3 { background: #FBF0E7; color: #C07400; }
+.bd-t4 { background: #FAEAEC; color: #C9342F; }
+/* Brand tags */
+.bd-tags {
+  display: flex; gap: 6px 8px; align-items: center;
+  justify-content: center; flex-wrap: wrap;
+}
+.bd-tag {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 14px; font-weight: 500; white-space: nowrap;
+}
+.bd-tag.me   { background: #D9E5F4; color: #0253B6; }
+.bd-tag.peer { background: #F7F7F8; color: #66666C; }
+/* "+N more" expand button */
+.bd-tag-more {
+  background: #F2F3F6; color: #82858b; cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+  border: 1px dashed #DEDFE3; transition: background 0.15s;
+}
+.bd-tag-more:hover { background: #EDEEF1; color: #45464f; }
+/* "show less" link */
+.bd-tag-less {
+  font-size: 12px; color: #B2B2B8; cursor: pointer;
+  text-decoration: underline; padding: 2px 4px; white-space: nowrap;
+}
+.bd-tag-less:hover { color: var(--pcv-brand); }
+.bd-empty-cell { color: #B2B2B2; font-style: italic; font-size: 14px; }
+.dp-dist-subtitle {
+  font-size: 12px; font-weight: 600; color: #66666c;
+  margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.dp-dist-bar-wrap {
+  position: relative; margin-bottom: 32px;
+}
+.dp-dist-bar-track {
+  height: 14px; display: flex; border-radius: 6px; overflow: hidden;
+  margin-bottom: 4px;
+}
+.dp-dist-bar-seg { flex: 1; }
+.dp-dist-bar-seg.s-t1 { background: rgba(40,199,111,0.45); }
+.dp-dist-bar-seg.s-t2 { background: rgba(2,83,182,0.25); }
+.dp-dist-bar-seg.s-t3 { background: rgba(255,159,67,0.45); }
+.dp-dist-bar-seg.s-t4 { background: rgba(234,84,85,0.35); }
+.dp-dist-bar-labels {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: #B2B2B8;
+}
+.dp-dist-marker {
+  position: absolute; top: -5px;
+  width: 14px; height: 24px;
+  display: flex; flex-direction: column; align-items: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.dp-dist-marker-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--pcv-brand); border: 2px solid #fff;
+  box-shadow: 0 0 0 2px var(--pcv-brand);
+  margin-top: 2px;
+}
+.dp-dist-marker-line {
+  width: 2px; flex: 1; background: var(--pcv-brand); opacity: 0.3;
+}
+.dp-dist-marker-label {
+  position: absolute; top: 26px;
+  font-size: 10px; color: var(--pcv-brand); font-weight: 600;
+  white-space: nowrap; transform: translateX(-50%);
+}
+.dp-dist-tier-labels {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.dp-dist-tier-chip {
+  font-size: 11px; font-weight: 500;
+  padding: 3px 8px; border-radius: 10px;
+  display: flex; align-items: center; gap: 4px;
+}
+.dp-dist-tier-chip.t1 { background: rgba(40,199,111,0.12); color: #1a9e55; }
+.dp-dist-tier-chip.t2 { background: rgba(2,83,182,0.08); color: #1a5db0; }
+.dp-dist-tier-chip.t3 { background: rgba(255,159,67,0.12); color: #c07400; }
+.dp-dist-tier-chip.t4 { background: rgba(234,84,85,0.10); color: #c9342e; }
+.dp-dist-tier-chip.current {
+  outline: 2px solid currentColor; outline-offset: 1px;
+}
+
+/* Peer comparison table */
+.dp-peer-table { width: 100%; border-collapse: collapse; }
+.dp-peer-table th {
+  font-size: 10px; font-weight: 600; color: #B2B2B8;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 0 8px 8px 0; text-align: left;
+}
+.dp-peer-table th:not(:first-child) { text-align: right; }
+.dp-peer-table td {
+  font-size: 12px; color: #45464f;
+  padding: 6px 8px 6px 0;
+  border-bottom: 1px solid #F2F3F6;
+}
+.dp-peer-table td:not(:first-child) { text-align: right; }
+.dp-peer-rank { color: #B2B2B8; font-size: 11px; }
+.dp-peer-badge {
+  font-size: 10px; font-weight: 600;
+  padding: 1px 5px; border-radius: 3px; display: inline-block;
+}
+.dp-peer-badge.t1 { background: rgba(40,199,111,0.12); color: #1a9e55; }
+.dp-peer-badge.t2 { background: rgba(2,83,182,0.08); color: #1a5db0; }
+.dp-peer-badge.t3 { background: rgba(255,159,67,0.12); color: #c07400; }
+.dp-peer-badge.t4 { background: rgba(234,84,85,0.10); color: #c9342e; }
+.dp-peer-this { background: rgba(2,83,182,0.04); }
+.dp-peer-this td { color: var(--pcv-brand); font-weight: 600; }
+.dp-peer-bar-track {
+  display: inline-block; width: 60px; height: 6px;
+  background: #F2F3F6; border-radius: 3px;
+  vertical-align: middle; overflow: hidden;
+}
+.dp-peer-bar-fill {
+  height: 100%; border-radius: 3px;
+  display: block;
+}
+.dp-peer-bar-fill.t1 { background: #28C76F; }
+.dp-peer-bar-fill.t2 { background: var(--pcv-brand); }
+.dp-peer-bar-fill.t3 { background: #FF9F43; }
+.dp-peer-bar-fill.t4 { background: #EA5455; }
+
+/* ── Detail Metric Table ── */
+.dp-dtable-wrap { overflow-x: auto; overflow-y: auto; flex: 1; }
+.dp-dtable {
+  width: 100%; border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+}
+.dp-dtable thead th {
+  font-size: 11px; font-weight: 600; color: #B2B2B8;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 8px 12px; text-align: right;
+  background: #FAFAFA; border-bottom: 1px solid #EDEEF1;
+  white-space: nowrap;
+}
+.dp-dtable thead th:first-child { text-align: left; min-width: 140px; }
+.dp-dtable tbody td {
+  padding: 10px 12px; font-size: 13px; color: #45464f;
+  text-align: right; border-bottom: 1px solid #F2F3F6;
+}
+.dp-dtable tbody td:first-child { text-align: left; font-weight: 500; }
+.dp-dtable tbody tr:last-child td { border-bottom: none; }
+.dp-dtable tbody tr:hover td { background: rgba(2,83,182,0.02); }
+.dp-dtable .dt-tier {
+  font-size: 10px; font-weight: 600;
+  padding: 1px 5px; border-radius: 3px; display: inline-block;
+  margin-left: 4px;
+}
+.dp-dtable .dt-tier.t1 { background: rgba(40,199,111,0.12); color: #1a9e55; }
+.dp-dtable .dt-tier.t2 { background: rgba(2,83,182,0.08); color: #1a5db0; }
+.dp-dtable .dt-tier.t3 { background: rgba(255,159,67,0.12); color: #c07400; }
+.dp-dtable .dt-tier.t4 { background: rgba(234,84,85,0.10); color: #c9342e; }
+.dp-dt-delta {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 12px;
+}
+.dp-dt-delta.pos { color: #28C76F; }
+.dp-dt-delta.neg { color: #EA5455; }
+.dp-dt-delta.neu { color: #B2B2B8; }
+
+/* ── Clickable cell hover states ── */
+
+/* ── Cell hover tooltip — Figma 1029:55335 ── */
+#cell-tooltip {
+  position: fixed; z-index: 9000;
+  width: 167px;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+  padding: 12px 16px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: all;
+  font-family: 'Inter', sans-serif;
+}
+#cell-tooltip.visible { display: flex; }
+
+/* Header section: flex-col, badge right-aligned */
+.tt-header { display: flex; flex-direction: column; align-items: flex-end; gap: 0; }
+.tt-header-row1 { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 8px; }
+.tt-metric { font-size: 14px; font-weight: 500; color: #45464f; line-height: 20px; flex: 1; }
+.tt-val { font-size: 14px; font-weight: 500; color: #45464f; line-height: 20px; white-space: nowrap; text-align: right; }
+
+/* Tier badge with per-tier colors — matches .mc-tier in cells */
+.tt-tier-badge {
+  font-size: 10px; font-weight: 600;
+  padding: 2px 6px; border-radius: 4px; white-space: nowrap; line-height: normal;
+  margin-top: 2px;
+}
+.tt-tier-badge.tier-t1 { background: rgba(40,199,111,0.12);  color: #1a9e55; }
+.tt-tier-badge.tier-t2 { background: rgba(2,83,182,0.08);    color: #1a5db0; }
+.tt-tier-badge.tier-t3 { background: rgba(255,159,67,0.12);  color: #c07400; }
+.tt-tier-badge.tier-t4 { background: rgba(234,84,85,0.10);   color: #c9342e; }
+
+/* Divider */
+.tt-divider { height: 1px; background: #EDEEF1; width: 100%; flex-shrink: 0; }
+
+/* P-rows */
+.tt-pct-rows { display: flex; flex-direction: column; gap: 8px; }
+.tt-pct-row { display: flex; align-items: center; justify-content: space-between; }
+.tt-pct-label { font-size: 12px; font-weight: 500; color: #45464f; line-height: 18px; flex-shrink: 0; }
+.tt-pct-label.tt-active { font-weight: 600; }
+.tt-pct-right { display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
+.tt-pct-delta { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 400; white-space: nowrap; }
+.tt-pct-delta.tt-active { font-weight: 600; }
+.tt-pct-delta.pos { color: #28C76F; }
+.tt-pct-delta.neg { color: #EA5455; }
+.tt-pct-delta.neu { color: #B2B2B8; }
+.tt-pct-val { font-size: 12px; font-weight: 400; color: #45464f; white-space: nowrap; text-align: right; }
+.tt-pct-val.tt-active { font-weight: 500; }
+
+/* ── Tier cell background: neutral (no color at rest) ── */
+.td-m.has-t1,
+.td-m.has-t2,
+.td-m.has-t3,
+.td-m.has-t4 { background: transparent; }
+
+/* ── Tier filter: dim non-matching, highlight matching in brand blue ── */
+.matrix.filtering .td-m { opacity: 0.12; transition: opacity 0.15s, background 0.15s; }
+.matrix.filtering .td-m.tier-match {
+  opacity: 1;
+  background: rgba(2,83,182,0.10) !important;
+}
+.matrix.filtering .td-m.tier-match .mc-val { color: var(--pcv-brand); }
+.matrix.filtering .td-cat { opacity: 1; }
+
+/* ── Tier summary bar — inline, per brand card ───── */
+.tier-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 24px;
+  height: 48px;
+  background: #FAFBFC;
+  border-bottom: 1px solid var(--pcv-divider);
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+}
+.tier-bar-label {
+  font-size: 12px; color: var(--pcv-text-opt); font-weight: 500;
+  margin-right: 4px; flex-shrink: 0;
+}
+/* Color legend — pushed to the right */
+.tier-chip {
+  display: inline-flex; align-items: center;
+  height: 28px; padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; user-select: none;
+}
+/* Each chip carries its tier color at rest — no border when unselected */
+.tier-chip.tc-t1 { background: rgba(40,199,111,0.12);  color: #1a9e55; border-color: transparent; }
+.tier-chip.tc-t2 { background: rgba(2,83,182,0.08);    color: #1a5db0; border-color: transparent; }
+.tier-chip.tc-t3 { background: rgba(255,159,67,0.12);  color: #c07400; border-color: transparent; }
+.tier-chip.tc-t4 { background: rgba(234,84,85,0.10);   color: #c9342e; border-color: transparent; }
+/* Active: same hue, stronger border + deeper bg */
+.tier-chip.tc-t1.active { background: rgba(40,199,111,0.22);  border-color: #28c76f; box-shadow: 0 1px 4px rgba(40,199,111,0.20); }
+.tier-chip.tc-t2.active { background: rgba(2,83,182,0.16);    border-color: var(--pcv-brand); box-shadow: 0 1px 4px rgba(2,83,182,0.18); }
+.tier-chip.tc-t3.active { background: rgba(255,159,67,0.22);  border-color: #ff9f43; box-shadow: 0 1px 4px rgba(255,159,67,0.20); }
+.tier-chip.tc-t4.active { background: rgba(234,84,85,0.18);   border-color: #ea5455; box-shadow: 0 1px 4px rgba(234,84,85,0.18); }
+.tier-chip.inactive { opacity: 0.35; }
+.tier-bar-reset {
+  font-size: 12px; color: var(--pcv-text-opt); cursor: pointer;
+  padding: 4px 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--pcv-divider); background: transparent;
+  transition: all 0.15s; display: none;
+}
+.tier-bar-reset.visible { display: inline-flex; align-items: center; }
+.tier-bar-reset:hover { border-color: var(--pcv-text-sec); color: var(--pcv-text-primary); }
+
+/* ══════════════════════════════════════════════════════
+   ONBOARDING TOUR
+   Step 1: Welcome Modal
+   Step 2: Spotlight — first data cell (P25/P50/P75 intro)
+   Step 3: Spotlight — Category Layer header (depth levels)
+══════════════════════════════════════════════════════ */
+
+/* ── Spotlight: border-only highlight, no dark overlay ── */
+#tour-spotlight {
+  position: fixed; z-index: 8001;
+  border-radius: 6px;
+  border: 2px solid var(--pcv-brand);
+  box-shadow: 0 0 0 4px rgba(2, 83, 182, 0.12);
+  transition: top .3s ease, left .3s ease, width .3s ease, height .3s ease;
+  pointer-events: none;
+  background: rgba(2, 83, 182, 0.04);
+}
+
+/* ── Step 1: Welcome Modal — Figma 23816:10240 ── */
+#tour-modal-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(0, 0, 0, 0.40);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+#tour-modal {
+  background: #fff;
+  border-radius: 6px;
+  width: 720px;
+  max-width: 100%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+/* Header: 56px, border-bottom */
+#tour-modal-header {
+  height: 56px; padding: 0 24px;
+  border-bottom: 1px solid #EDEEF1;
+  display: flex; align-items: center; justify-content: space-between;
+}
+#tour-modal-header-title {
+  font-size: 18px; font-weight: 600; color: #45464f; line-height: 22px;
+}
+#tour-modal-close {
+  width: 20px; height: 20px;
+  border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #B2B2B8; padding: 0; transition: color 0.15s;
+}
+#tour-modal-close:hover { color: #66666c; }
+#tour-modal-close svg { width: 20px; height: 20px; display: block; }
+/* Body: padding 24px, image + text side-by-side */
+#tour-modal-body {
+  padding: 24px;
+  display: flex; align-items: flex-start; gap: 24px;
+}
+#tour-modal-img {
+  width: 160px; height: 160px; flex-shrink: 0;
+  border-radius: 6px; overflow: hidden;
+  background: #F6F7FB;
+  display: flex; align-items: center; justify-content: center;
+}
+#tour-modal-text {
+  flex: 1; display: flex; flex-direction: column; gap: 12px;
+}
+#tour-modal-text h2 {
+  font-size: 20px; font-weight: 700; color: #45464f;
+  margin: 0; line-height: 1.4;
+}
+#tour-modal-text p {
+  font-size: 14px; font-weight: 400; color: #66666c;
+  line-height: 1.6; margin: 0;
+}
+/* Footer: py-16 pr-24, right-aligned buttons */
+#tour-modal-footer {
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+  background: #fff;
+}
+.tour-btn-primary {
+  height: 36px; padding: 0 20px;
+  background: var(--pcv-brand); color: #fff;
+  border: none; border-radius: 4px;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: opacity 0.15s;
+}
+.tour-btn-primary:hover { opacity: 0.88; }
+.tour-btn-ghost {
+  height: 36px; padding: 0 16px;
+  background: none; color: #82858b;
+  border: 1px solid #DEDFE3; border-radius: 4px;
+  font-size: 14px; font-weight: 400; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.15s;
+}
+.tour-btn-ghost:hover { border-color: #B2B2B8; color: #45464f; }
+
+/* ══ Tooltip base (shared layout) ══ */
+#tour-tooltip {
+  position: fixed; z-index: 8002;
+  width: 340px;
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Inter', sans-serif;
+  transition: top .3s ease, left .3s ease;
+  display: flex; flex-direction: column; gap: 16px;
+}
+#tour-tooltip::before {
+  content: ''; position: absolute;
+  width: 10.5px; height: 10.5px;
+  z-index: 2;
+}
+#tour-tooltip.arrow-top::before    { top: -5px;    left: 50%; transform: translateX(-50%) rotate(-135deg); }
+#tour-tooltip.arrow-bottom::before { bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg); }
+#tour-tooltip.arrow-left::before   { left: -5px;   top: 20px; transform: rotate(135deg); }
+#tour-tooltip.arrow-right::before  { right: -5px;  top: 20px; transform: rotate(-45deg); }
+
+/* ── DARK theme (preserved as .theme-dark) ── */
+#tour-tooltip.theme-dark {
+  background: #001124;
+  box-shadow: 0 1px 8px rgba(103,132,162,0.16), 0 2px 3px rgba(103,132,162,0.08);
+  color: #fff;
+}
+#tour-tooltip.theme-dark::before { background: #001124; }
+#tour-tooltip.theme-dark .tour-tt-step  { color: rgba(255,255,255,0.45); }
+#tour-tooltip.theme-dark .tour-tt-title { color: #fff; }
+#tour-tooltip.theme-dark .tour-tt-body  { color: rgba(255,255,255,0.85); }
+#tour-tooltip.theme-dark .tour-tt-row   { color: rgba(255,255,255,0.85); }
+#tour-tooltip.theme-dark .tour-tt-row-key { color: #fff; }
+#tour-tooltip.theme-dark .tour-tt-row-val { color: rgba(255,255,255,0.75); }
+#tour-tooltip.theme-dark .tour-tt-tip  { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+#tour-tooltip.theme-dark .tour-tt-tip b { color: #fff; }
+#tour-tooltip.theme-dark .tour-tt-link { color: rgba(255,255,255,0.70); }
+#tour-tooltip.theme-dark .tour-tt-link:hover { color: #fff; }
+#tour-tooltip.theme-dark .tour-tt-skip { color: rgba(255,255,255,0.45); }
+#tour-tooltip.theme-dark .tour-tt-skip:hover { color: rgba(255,255,255,0.75); }
+#tour-tooltip.theme-dark .tour-btn-tt-primary { background: #fff; color: #00123F; }
+#tour-tooltip.theme-dark .tour-btn-tt-ghost   { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.25); }
+#tour-tooltip.theme-dark .tour-btn-tt-ghost:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+
+/* ── LIGHT theme (active) ── */
+#tour-tooltip.theme-light {
+  background: #ffffff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  color: #45464f;
+  border: 1px solid #EDEEF1;
+}
+#tour-tooltip.theme-light::before { background: #ffffff; box-shadow: -1px -1px 0 #EDEEF1; }
+#tour-tooltip.theme-light .tour-tt-step  { color: #B2B2B8; }
+#tour-tooltip.theme-light .tour-tt-title { color: #1a1b23; }
+#tour-tooltip.theme-light .tour-tt-body  { color: #66666c; opacity: 1; }
+#tour-tooltip.theme-light .tour-tt-row   { color: #45464f; }
+#tour-tooltip.theme-light .tour-tt-row-key { color: #1a1b23; }
+#tour-tooltip.theme-light .tour-tt-row-val { color: #66666c; }
+#tour-tooltip.theme-light .tour-tt-tip  { background: #F6F7FB; color: #66666c; }
+#tour-tooltip.theme-light .tour-tt-tip b { color: #45464f; }
+#tour-tooltip.theme-light .tour-tt-link { color: var(--pcv-brand); }
+#tour-tooltip.theme-light .tour-tt-link:hover { color: #0140a0; }
+#tour-tooltip.theme-light .tour-tt-footer { border-top: 1px solid #EDEEF1; padding-top: 14px; }
+#tour-tooltip.theme-light .tour-tt-skip { color: #B2B2B8; }
+#tour-tooltip.theme-light .tour-tt-skip:hover { color: #82858b; }
+#tour-tooltip.theme-light .tour-btn-tt-primary { background: var(--pcv-brand); color: #fff; }
+#tour-tooltip.theme-light .tour-btn-tt-primary:hover { opacity: 0.88; }
+#tour-tooltip.theme-light .tour-btn-tt-ghost { color: #66666c; border-color: #DEDFE3; background: none; }
+#tour-tooltip.theme-light .tour-btn-tt-ghost:hover { border-color: #B2B2B8; color: #45464f; }
+
+/* Content area */
+.tour-tt-content { display: flex; flex-direction: column; gap: 8px; }
+.tour-tt-step  { font-size: 12px; font-weight: 400; letter-spacing: 0; margin: 0; }
+.tour-tt-title { font-size: 16px; font-weight: 600; margin: 0; line-height: 20px; }
+.tour-tt-body  { font-size: 14px; font-weight: 400; line-height: 20px; margin: 0; }
+.tour-tt-body b { font-weight: 600; }
+.tour-tt-table { display: flex; flex-direction: column; gap: 6px; padding: 0; margin: 0; }
+.tour-tt-row   { display: flex; align-items: baseline; gap: 8px; font-size: 13px; line-height: 1.6; }
+.tour-tt-row-key { font-weight: 600; flex-shrink: 0; width: 28px; }
+.tour-tt-row-val { }
+.tour-tt-tip { display: flex; align-items: flex-start; gap: 8px; border-radius: 6px; padding: 10px 12px; font-size: 13px; line-height: 1.6; }
+.tour-tt-tip-icon { flex-shrink: 0; font-size: 14px; line-height: 1.6; }
+.tour-tt-tip b { font-weight: 600; }
+.tour-tt-link { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 500; text-decoration: none; }
+.tour-tt-link:hover { text-decoration: underline; }
+.tour-tt-link svg { width: 12px; height: 12px; }
+.tour-tt-footer { display: flex; align-items: center; justify-content: space-between; }
+.tour-tt-skip {
+  font-size: 14px; cursor: pointer;
+  background: none; border: none; padding: 0; font-family: 'Inter', sans-serif;
+  transition: color 0.15s; height: 36px;
+}
+.tour-tt-skip:hover { color: rgba(255,255,255,0.75); }
+.tour-tt-actions { display: flex; align-items: center; gap: 8px; }
+
+/* Primary button: white bg + dark text — Figma spec */
+.tour-btn-tt-primary {
+  height: 36px; padding: 0 16px;
+  background: #fff; color: #00123F;
+  border: none; border-radius: 6px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.tour-btn-tt-primary:hover { opacity: 0.88; }
+
+/* Ghost button: transparent outline white */
+.tour-btn-tt-ghost {
+  height: 36px; padding: 0 14px;
+  background: transparent; color: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.25); border-radius: 6px;
+  font-size: 14px; font-weight: 400; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.15s;
+  white-space: nowrap;
+}
+.tour-btn-tt-ghost:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ ONBOARDING TOUR HTML ══════════════ -->
+
+<!-- Step 1: Welcome Modal — Figma 23816:10240 -->
+<div id="tour-modal-overlay">
+  <div id="tour-modal" role="dialog" aria-modal="true" aria-labelledby="tour-modal-title">
+    <!-- Header -->
+    <div id="tour-modal-header">
+      <span id="tour-modal-header-title">New Feature</span>
+      <button id="tour-modal-close" aria-label="Close">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Body -->
+    <div id="tour-modal-body">
+      <!-- Left illustration -->
+      <div id="tour-modal-img">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="44" width="14" height="28" rx="3" fill="var(--pcv-brand)" opacity="0.25"/>
+          <rect x="28" y="28" width="14" height="44" rx="3" fill="var(--pcv-brand)" opacity="0.55"/>
+          <rect x="48" y="14" width="14" height="58" rx="3" fill="var(--pcv-brand)"/>
+          <line x1="6" y1="72" x2="74" y2="72" stroke="#DEDFE3" stroke-width="2" stroke-linecap="round"/>
+          <!-- P25 line -->
+          <line x1="6" y1="56" x2="74" y2="56" stroke="#28C76F" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <!-- P75 line -->
+          <line x1="6" y1="30" x2="74" y2="30" stroke="#EA5455" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="76" y="59" font-size="8" fill="#28C76F" font-family="Inter" font-weight="600">P25</text>
+          <text x="76" y="33" font-size="8" fill="#EA5455" font-family="Inter" font-weight="600">P75</text>
+        </svg>
+      </div>
+      <!-- Right text -->
+      <div id="tour-modal-text">
+        <h2 id="tour-modal-title">Welcome to Benchmark Analysis</h2>
+        <p>Powered by Amazon's official benchmark data, helping you understand how your brand's ad performance compares to category peers — and where to optimize.</p>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div id="tour-modal-footer">
+      <button class="tour-btn-ghost" id="tour-modal-skip">Skip tour</button>
+      <button class="tour-btn-primary" id="tour-modal-start">Get Started</button>
+    </div>
+  </div>
+</div>
+
+<!-- Step 2 & 3: Spotlight + Tooltip (hidden by default) -->
+<div id="tour-spotlight" style="display:none"></div>
+<div id="tour-tooltip" style="display:none">
+  <!-- content injected by JS -->
+</div>
+
+<!-- ══════════════ END ONBOARDING TOUR HTML ══════════════ -->
+
+<!-- ── Sidebar ── -->
+<div class="sidebar">
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <img src="https://www.figma.com/api/mcp/asset/85533a31-cf1b-4f60-9e80-70f0925c9b53" alt="Pacvue">
+    <div class="logo-mark">
+      <img src="https://www.figma.com/api/mcp/asset/cd708272-5021-40d2-9562-29e51b82d2dc" alt="">
+    </div>
+  </div>
+
+  <!-- Nav icons -->
+  <div class="sidebar-nav">
+    <div class="sidebar-icon" title="Favorites">
+      <img src="https://www.figma.com/api/mcp/asset/10d4218b-c9c9-4267-8fcd-0c9ad739f771" alt="Favorites">
+    </div>
+    <div class="sidebar-icon" title="Home">
+      <img src="https://www.figma.com/api/mcp/asset/1e0921ec-21b9-42ac-ad1b-85614606db5f" alt="Home">
+    </div>
+    <div class="sidebar-icon" title="Budget Manager">
+      <img src="https://www.figma.com/api/mcp/asset/d663a96c-fb67-4a98-becc-ab51182f1474" alt="Budget Manager">
+    </div>
+    <div class="sidebar-icon" title="Advertising">
+      <img src="https://www.figma.com/api/mcp/asset/37bf24fd-031a-44a1-8607-3dad4cdc3fa6" alt="Advertising">
+    </div>
+    <div class="sidebar-icon" title="Competitor Analysis">
+      <img src="https://www.figma.com/api/mcp/asset/65f32ac8-7c6c-4e79-abd8-f5a114e45551" alt="Competitor Analysis">
+    </div>
+    <div class="sidebar-icon active" title="Report">
+      <img src="https://www.figma.com/api/mcp/asset/2df41587-3cc3-46ce-aeaa-efbf4b32f9a4" alt="Report">
+    </div>
+    <div class="sidebar-icon" title="Research">
+      <img src="https://www.figma.com/api/mcp/asset/eae49bf1-18be-442b-84d5-0b64506d6f44" alt="Research">
+    </div>
+    <div class="sidebar-icon" title="Optimization">
+      <img src="https://www.figma.com/api/mcp/asset/f73976d3-55f4-4d81-8217-4c442b767340" alt="Optimization">
+    </div>
+    <div class="sidebar-icon" title="Detail">
+      <img src="https://www.figma.com/api/mcp/asset/ab4304a5-ad66-40b4-a269-765b96a6f7cc" alt="Detail">
+    </div>
+    <div class="sidebar-icon" title="Event">
+      <img src="https://www.figma.com/api/mcp/asset/22c71d54-d852-4741-a1df-561b13e631b5" alt="Event">
+    </div>
+  </div>
+</div>
+
+<!-- ── Page Shell ── -->
+<div class="page-shell">
+
+  <!-- Top Nav -->
+  <div class="top-nav">
+    <!-- Left: Platform + Workspace -->
+    <div class="tn-left">
+      <div class="tn-platform">
+        <div class="tn-amazon-logo">
+          <img src="https://www.figma.com/api/mcp/asset/caa37d1d-c778-4ea9-9345-4f5e0a23a00f" alt="Amazon">
+        </div>
+        <span class="tn-chevron">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+        </span>
+      </div>
+      <div class="tn-workspace-pill">
+        <img src="https://www.figma.com/api/mcp/asset/b4659b12-8438-4123-a1e6-ce33c6c3676f" alt="store">
+        <span>Pacvue HQ</span>
+      </div>
+    </div>
+
+    <!-- Right: Icons + User -->
+    <div class="tn-right">
+      <div class="tn-user">
+        <span class="tn-user-name">amy.wolf@vitalcouture.com</span>
+        <span class="tn-user-chevron">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg>
+        </span>
+      </div>
+      <div class="tn-divider"></div>
+      <div class="tn-icon">
+        <img src="https://www.figma.com/api/mcp/asset/3096a2e6-a897-4619-8cbe-45fb5d1db236" alt="download">
+      </div>
+      <div class="tn-bell-wrap">
+        <div class="tn-icon">
+          <img src="https://www.figma.com/api/mcp/asset/e813e7b1-84d6-4cbd-bba0-b202ae462991" alt="notifications">
+        </div>
+        <span class="tn-bell-dot"></span>
+      </div>
+      <div class="tn-divider"></div>
+      <div class="tn-user">
+        <span class="tn-user-name">demo@pacvue.com</span>
+        <span class="tn-user-chevron">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-bar">
+    <!-- Left: Title + Star -->
+    <div class="bc-left">
+      <span class="bc-title">Brand Benchmark</span>
+      <div class="bc-star">
+        <img src="https://www.figma.com/api/mcp/asset/81919fe9-8799-45fd-9689-e0ff1101e4f0" alt="favorite">
+      </div>
+    </div>
+    <!-- Right: Period selector + Download -->
+    <div class="bc-right">
+      <div class="bc-period">
+        <div class="bc-period-left">
+          <span class="bc-period-label">Weekly</span>
+          <div class="bc-period-chevron">
+            <img src="https://www.figma.com/api/mcp/asset/b0eb04ba-3bbc-468a-996b-de2269cc8542" alt="▾">
+          </div>
+          <div class="bc-period-divider"></div>
+          <span class="bc-period-week">Week 53</span>
+        </div>
+        <div class="bc-period-cal">
+          <img src="https://www.figma.com/api/mcp/asset/0e3a3a86-731d-4f94-b81c-1d81c674c556" alt="calendar">
+        </div>
+      </div>
+      <div class="bc-download">
+        <img src="https://www.figma.com/api/mcp/asset/ae10b9fb-940a-4215-9347-edab503fa57b" alt="download">
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Filter Card (standalone module) -->
+    <div class="filter-card">
+      <div class="filter-bar">
+        <!-- Left: filter conditions + segmented -->
+        <div class="filter-bar-left">
+          <div class="filter-cond">
+            <div class="fc-inner">
+              <span class="fc-label">Profile</span>
+              <div class="fc-divider"></div>
+              <span class="fc-value">Select All</span>
+            </div>
+            <span class="fc-arrow"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7.5L10 12.5L15 7.5" stroke="#DEDFE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+          <div class="filter-cond">
+            <div class="fc-inner">
+              <span class="fc-label">Brand</span>
+              <div class="fc-divider"></div>
+              <span class="fc-value">Select All</span>
+            </div>
+            <span class="fc-arrow"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7.5L10 12.5L15 7.5" stroke="#DEDFE3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+          <div class="filter-seg">
+            <button class="seg-btn active">All</button>
+            <button class="seg-btn">SB</button>
+            <button class="seg-btn">SD</button>
+            <button class="seg-btn">SP</button>
+          </div>
+        </div>
+        <!-- Right: Search + Clear -->
+        <div class="filter-bar-right">
+          <button class="btn-search">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.4 12.85a7 7 0 10-1.55 1.55l3.6 3.6a1.1 1.1 0 101.55-1.55l-3.6-3.6zM9 14a5 5 0 110-10 5 5 0 010 10z" fill="currentColor"/>
+            </svg>
+            Search
+          </button>
+          <button class="btn-clear" title="Clear filters">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 2.5h3.5a.75.75 0 010 1.5h-.71l-.85 11.32A2.25 2.25 0 0112.7 17.5h-5.4a2.25 2.25 0 01-2.24-2.18L4.21 4H3.5a.75.75 0 010-1.5H7V1.75A1.75 1.75 0 018.75 0h2.5A1.75 1.75 0 0113 1.75V2.5zM8.5 1.75V2.5h3V1.75a.25.25 0 00-.25-.25h-2.5a.25.25 0 00-.25.25zM8 6.5a.75.75 0 00-.75.78l.25 6.5a.75.75 0 101.5-.06l-.25-6.5A.75.75 0 008 6.5zm4 0a.75.75 0 00-.75.72l-.25 6.5a.75.75 0 001.5.06l.25-6.5A.75.75 0 0012 6.5z" fill="currentColor"/>
+            </svg>
+          </button>
+      </div>
+    </div>
+    </div><!-- /filter-card -->
+
+    <!-- row count placeholder (used by JS, not rendered visibly) -->
+    <div id="rowCount" style="display:none"></div>
+    <!-- expand/collapse stubs (referenced by JS) -->
+    <button id="expandAll" style="display:none"></button>
+    <button id="collapseAll" style="display:none"></button>
+    <div id="depthGrp" style="display:none"></div>
+
+    <!-- Brand table cards — generated by JS -->
+    <div id="brandContainer" style="display:flex;flex-direction:column;gap:24px;"></div>
+  </div><!-- /content -->
+
+</div><!-- /page-shell -->
+
+<script>
+// ── Layer icon config ─────────────────────────────────────────────────────────
+const LAYER_SVG = `<svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.67358 6.51832L0.323112 3.76389C0.231169 3.72658 0.15245 3.66269 0.097028 3.58039C0.0416058 3.49809 0.0120006 3.40114 0.0120006 3.30192C0.0120006 3.2027 0.0416058 3.10575 0.097028 3.02345C0.15245 2.94115 0.231169 2.87726 0.323112 2.83995L5.61418 0.0855179C5.72019 0.0293602 5.83833 0 5.9583 0C6.07826 0 6.19641 0.0293602 6.30241 0.0855179L11.6889 2.83995C11.7808 2.87726 11.8595 2.94115 11.915 3.02345C11.9704 3.10575 12 3.2027 12 3.30192C12 3.40114 11.9704 3.49809 11.915 3.58039C11.8595 3.66269 11.7808 3.72658 11.6889 3.76389L6.38582 6.51832C6.27642 6.5774 6.15404 6.60833 6.0297 6.60833C5.90537 6.60833 5.78298 6.5774 5.67358 6.51832ZM11.6589 5.53618C11.7504 5.57473 11.8285 5.63941 11.8834 5.72211C11.9383 5.80482 11.9676 5.90189 11.9676 6.00115C11.9676 6.10042 11.9383 6.19749 11.8834 6.28019C11.8285 6.3629 11.7504 6.42758 11.6589 6.46613L6.35582 9.22056C6.24796 9.27415 6.12915 9.30204 6.0087 9.30204C5.88825 9.30204 5.76945 9.27415 5.66158 9.22056L0.311111 6.46433C0.219623 6.42578 0.141539 6.3611 0.0866344 6.27839C0.0317301 6.19569 0.00244493 6.09862 0.00244493 5.99935C0.00244493 5.90008 0.0317301 5.80302 0.0866344 5.72031C0.141539 5.63761 0.219623 5.57293 0.311111 5.53438L0.723932 5.3244L5.67358 7.86884C5.78154 7.92212 5.90031 7.94983 6.0207 7.94983C6.14109 7.94983 6.25986 7.92212 6.36782 7.86884L11.2575 5.33039L11.6583 5.53438L11.6589 5.53618ZM11.6589 8.23602C11.7508 8.27333 11.8295 8.33722 11.885 8.41952C11.9404 8.50181 11.97 8.59877 11.97 8.69799C11.97 8.7972 11.9404 8.89416 11.885 8.97646C11.8295 9.05876 11.7508 9.12265 11.6589 9.15996L6.35582 11.9144C6.24876 11.9706 6.12963 12 6.0087 12C5.88777 12 5.76864 11.9706 5.66158 11.9144L0.311111 9.15876C0.219168 9.12145 0.14045 9.05756 0.0850274 8.97526C0.0296052 8.89296 0 8.796 0 8.69679C0 8.59757 0.0296052 8.50061 0.0850274 8.41832C0.14045 8.33602 0.219168 8.27213 0.311111 8.23482L0.723932 8.01883L5.67358 10.5693C5.78154 10.6226 5.90031 10.6503 6.0207 10.6503C6.14109 10.6503 6.25986 10.6226 6.36782 10.5693L11.2575 8.02483L11.6583 8.23482L11.6589 8.23602Z" fill="currentColor"/></svg>`;
+
+const LAYER_COLORS      = { 1: '#7AAEDD', 2: '#E8B055', 3: '#B08AE0', 4: '#3DC49A' }; // border colors
+const LAYER_TEXT_COLORS = { 1: '#2B6CB8', 2: '#C07B1A', 3: '#7B45C9', 4: '#1A8C65' }; // icon+text colors
+const LAYER_BG_COLORS   = { 1: '#E6EEFA', 2: '#FEF5E6', 3: '#F4EFFE', 4: '#E7F8F2' }; // bg colors
+
+function layerBadgeHTML(level) {
+  return `<span class="l-badge lb${level}">L${level}</span>`;
+}
+
+// Build depth buttons
+(function buildDepthBtns() {
+  const grp = document.getElementById('depthGrp');
+  [1,2,3,4].forEach(d => {
+    const btn = document.createElement('div');
+    btn.className = 'depth-btn' + (d === 1 ? ' on' : '');
+    btn.dataset.d = d;
+    btn.innerHTML = `<span class="d-icon">${LAYER_SVG}${d}</span>`;
+    grp.appendChild(btn);
+  });
+})();
+
+// Inject inner layout into all .th-m cells after render
+function reinjectThLabels(brandId) {
+  document.querySelectorAll(`#mainTable-${brandId} .th-m`).forEach(th => {
+    const label = th.textContent.trim();
+    if (label) th.innerHTML = `<div class="th-m-inner"><span class="th-label">${label}</span></div>`;
+  });
+}
+
+// good:'high' → ↑ inverted (high value = P0-P25 best)
+// good:'low'  → ↓ not inverted (low value = P0-P25 best)
+const METRICS = {
+  sp: [
+    { key: 'ctr', label: 'CTR',              good: 'high', fmt: v => v.toFixed(2) + '%' },
+    { key: 'cpc', label: 'CPC',              good: 'low',  fmt: v => '$' + v.toFixed(2) },
+  ],
+  sb: [
+    { key: 'ctr',               label: 'CTR',              good: 'high', fmt: v => v.toFixed(2) + '%',  cls: 'first-in-group' },
+    { key: 'cpc',               label: 'CPC',              good: 'low',  fmt: v => '$' + v.toFixed(2) },
+    { key: 'cpm',               label: 'CPM',              good: 'low',  fmt: v => '$' + v.toFixed(2) },
+    { key: 'pct_purchases',     label: '% Purchases',      good: 'high', fmt: v => v.toFixed(1) + '%' },
+    { key: 'purchase_rate',     label: 'Purchase Rate',    good: 'high', fmt: v => v.toFixed(2) + '%' },
+    { key: 'cost_per_purchase', label: 'Cost/Purchase',    good: 'low',  fmt: v => '$' + v.toFixed(1) },
+  ],
+  sd: [
+    { key: 'ctr',                     label: 'CTR',                    good: 'high', fmt: v => v.toFixed(2) + '%',  cls: 'first-in-group' },
+    { key: 'cpc',                     label: 'CPC',                    good: 'low',  fmt: v => '$' + v.toFixed(2) },
+    { key: 'cpm',                     label: 'CPM',                    good: 'low',  fmt: v => '$' + v.toFixed(2) },
+    { key: 'pct_purchases',           label: '% Purchases',            good: 'high', fmt: v => v.toFixed(1) + '%' },
+    { key: 'purchase_rate',           label: 'Purchase Rate',          good: 'high', fmt: v => v.toFixed(2) + '%' },
+    { key: 'cost_per_purchase',       label: 'Cost/Purchase',          good: 'low',  fmt: v => '$' + v.toFixed(1) },
+    { key: 'completion_rate',         label: 'Completion Rate',        good: 'high', fmt: v => v.toFixed(1) + '%' },
+    { key: 'cost_per_completed_view', label: 'Cost/Completed View',    good: 'low',  fmt: v => '$' + v.toFixed(3) },
+  ],
+};
+
+// ── Per-brand data ────────────────────────────────────────────────────────────
+const DATA_DOLPHIN_BACKYARD = {
+  "Beauty & Personal Care": {
+    sp: { ctr:{val:1.21,p50:1.05}, cpc:{val:0.52,p50:0.58} },
+    sb: { ctr:{val:0.89,p50:0.80}, cpc:{val:0.68,p50:0.72}, cpm:{val:8.50,p50:9.20}, pct_purchases:{val:3.2,p50:2.8}, purchase_rate:{val:0.80,p50:0.70}, cost_per_purchase:{val:42.5,p50:48.0} },
+    sd: { ctr:{val:0.34,p50:0.30}, cpc:{val:0.22,p50:0.25}, cpm:{val:5.20,p50:6.10}, pct_purchases:{val:2.1,p50:1.8}, purchase_rate:{val:0.60,p50:0.55}, cost_per_purchase:{val:55.0,p50:62.0}, completion_rate:{val:35.2,p50:32.0}, cost_per_completed_view:{val:0.120,p50:0.150} },
+    children: {
+      "Hair Care": {
+        sp: { ctr:{val:2.14,p50:1.80}, cpc:{val:0.38,p50:0.45} },
+        sb: { ctr:{val:1.45,p50:1.20}, cpc:{val:0.52,p50:0.60}, cpm:{val:6.80,p50:7.90}, pct_purchases:{val:4.8,p50:3.9}, purchase_rate:{val:1.20,p50:1.00}, cost_per_purchase:{val:32.5,p50:38.0} },
+        sd: { ctr:{val:0.61,p50:0.55}, cpc:{val:0.18,p50:0.22}, cpm:{val:4.10,p50:5.20}, pct_purchases:{val:3.5,p50:2.8}, purchase_rate:{val:0.90,p50:0.75}, cost_per_purchase:{val:42.0,p50:50.0}, completion_rate:{val:41.5,p50:36.0}, cost_per_completed_view:{val:0.095,p50:0.130} },
+        children: {
+          "Styling Tools": {
+            sp: { ctr:{val:3.21,p50:2.50}, cpc:{val:0.62,p50:0.70} },
+            sb: { ctr:{val:2.18,p50:1.90}, cpc:{val:0.78,p50:0.85}, cpm:{val:5.90,p50:7.10}, pct_purchases:{val:6.2,p50:5.1}, purchase_rate:{val:1.55,p50:1.30}, cost_per_purchase:{val:24.5,p50:29.0} },
+            sd: { ctr:{val:0.92,p50:0.80}, cpc:{val:0.31,p50:0.38}, cpm:{val:3.80,p50:4.90}, pct_purchases:{val:5.1,p50:3.8}, purchase_rate:{val:1.28,p50:0.95}, cost_per_purchase:{val:33.0,p50:41.0}, completion_rate:{val:48.2,p50:40.0}, cost_per_completed_view:{val:0.072,p50:0.105} },
+            children: {
+              "Hair Dryers": {
+                sp: { ctr:{val:4.12,p50:3.20}, cpc:{val:0.71,p50:0.82} },
+                sb: { ctr:{val:2.90,p50:2.50}, cpc:{val:0.88,p50:1.00}, cpm:{val:5.20,p50:6.50}, pct_purchases:{val:7.8,p50:6.2}, purchase_rate:{val:1.95,p50:1.55}, cost_per_purchase:{val:18.5,p50:23.0} },
+                sd: { ctr:{val:1.10,p50:0.95}, cpc:{val:0.38,p50:0.45}, cpm:{val:3.20,p50:4.10}, pct_purchases:{val:6.5,p50:4.8}, purchase_rate:{val:1.63,p50:1.20}, cost_per_purchase:{val:26.0,p50:33.0}, completion_rate:{val:55.1,p50:45.0}, cost_per_completed_view:{val:0.058,p50:0.085} },
+                children: {}
+              },
+              "Curling Irons": {
+                sp: { ctr:{val:2.89,p50:2.80}, cpc:{val:0.55,p50:0.62} },
+                sb: { ctr:{val:1.98,p50:2.10}, cpc:{val:0.71,p50:0.80}, cpm:{val:6.10,p50:6.80}, pct_purchases:{val:5.5,p50:5.8}, purchase_rate:{val:1.38,p50:1.45}, cost_per_purchase:{val:27.5,p50:26.0} },
+                sd: { ctr:{val:0.74,p50:0.80}, cpc:{val:0.28,p50:0.34}, cpm:{val:4.10,p50:4.80}, pct_purchases:{val:4.2,p50:4.8}, purchase_rate:{val:1.05,p50:1.20}, cost_per_purchase:{val:35.0,p50:32.0}, completion_rate:{val:44.8,p50:43.0}, cost_per_completed_view:{val:0.082,p50:0.095} },
+                children: {}
+              },
+              "Flat Irons": {
+                sp: { ctr:{val:3.45,p50:3.10}, cpc:{val:0.68,p50:0.75} },
+                sb: { ctr:{val:2.31,p50:2.20}, cpc:{val:0.82,p50:0.90}, cpm:{val:5.70,p50:6.90}, pct_purchases:{val:6.8,p50:5.9}, purchase_rate:{val:1.70,p50:1.48}, cost_per_purchase:{val:21.0,p50:25.0} },
+                sd: { ctr:{val:0.88,p50:0.85}, cpc:{val:0.33,p50:0.40}, cpm:{val:3.60,p50:4.50}, pct_purchases:{val:5.8,p50:4.5}, purchase_rate:{val:1.45,p50:1.13}, cost_per_purchase:{val:28.5,p50:35.0}, completion_rate:{val:51.2,p50:44.0}, cost_per_completed_view:{val:0.065,p50:0.090} },
+                children: {}
+              }
+            }
+          },
+          "Shampoo & Conditioner": {
+            sp: { ctr:{val:0.98,p50:1.20}, cpc:{val:0.22,p50:0.28} },
+            sb: { ctr:{val:0.72,p50:0.90}, cpc:{val:0.31,p50:0.38}, cpm:{val:8.90,p50:9.80}, pct_purchases:{val:2.1,p50:2.9}, purchase_rate:{val:0.53,p50:0.73}, cost_per_purchase:{val:58.5,p50:52.0} },
+            sd: { ctr:{val:0.28,p50:0.35}, cpc:{val:0.12,p50:0.16}, cpm:{val:6.20,p50:7.10}, pct_purchases:{val:1.4,p50:2.0}, purchase_rate:{val:0.35,p50:0.50}, cost_per_purchase:{val:72.0,p50:64.0}, completion_rate:{val:28.5,p50:32.0}, cost_per_completed_view:{val:0.158,p50:0.135} },
+            children: {}
+          },
+          "Hair Color": {
+            sp: { ctr:{val:1.45,p50:1.50}, cpc:{val:0.31,p50:0.36} },
+            sb: { ctr:{val:1.02,p50:1.10}, cpc:{val:0.42,p50:0.48}, cpm:{val:7.80,p50:8.50}, pct_purchases:{val:3.8,p50:3.5}, purchase_rate:{val:0.95,p50:0.88}, cost_per_purchase:{val:44.0,p50:48.0} },
+            sd: { ctr:{val:0.41,p50:0.48}, cpc:{val:0.18,p50:0.22}, cpm:{val:5.50,p50:6.40}, pct_purchases:{val:2.8,p50:3.0}, purchase_rate:{val:0.70,p50:0.75}, cost_per_purchase:{val:62.0,p50:58.0}, completion_rate:{val:33.5,p50:35.0}, cost_per_completed_view:{val:0.132,p50:0.125} },
+            children: {}
+          }
+        }
+      },
+      "Makeup": {
+        sp: { ctr:{val:0.87,p50:1.10}, cpc:{val:0.44,p50:0.50} },
+        sb: { ctr:{val:0.61,p50:0.80}, cpc:{val:0.58,p50:0.65}, cpm:{val:10.20,p50:9.80}, pct_purchases:{val:1.8,p50:2.5}, purchase_rate:{val:0.45,p50:0.63}, cost_per_purchase:{val:68.0,p50:58.0} },
+        sd: { ctr:{val:0.22,p50:0.30}, cpc:{val:0.21,p50:0.26}, cpm:{val:6.80,p50:7.50}, pct_purchases:{val:1.2,p50:1.8}, purchase_rate:{val:0.30,p50:0.45}, cost_per_purchase:{val:88.0,p50:72.0}, completion_rate:{val:25.2,p50:30.0}, cost_per_completed_view:{val:0.188,p50:0.165} },
+        children: {
+          "Face Makeup": {
+            sp: { ctr:{val:0.72,p50:1.05}, cpc:{val:0.48,p50:0.54} },
+            sb: { ctr:{val:0.51,p50:0.78}, cpc:{val:0.62,p50:0.70}, cpm:{val:11.50,p50:10.20}, pct_purchases:{val:1.4,p50:2.2}, purchase_rate:{val:0.35,p50:0.55}, cost_per_purchase:{val:78.0,p50:65.0} },
+            sd: { ctr:{val:0.18,p50:0.28}, cpc:{val:0.23,p50:0.28}, cpm:{val:7.50,p50:8.20}, pct_purchases:{val:0.9,p50:1.6}, purchase_rate:{val:0.23,p50:0.40}, cost_per_purchase:{val:105.0,p50:88.0}, completion_rate:{val:22.1,p50:28.0}, cost_per_completed_view:{val:0.215,p50:0.185} },
+            children: {}
+          },
+          "Eye Makeup": {
+            sp: { ctr:{val:1.12,p50:1.20}, cpc:{val:0.39,p50:0.45} },
+            sb: { ctr:{val:0.78,p50:0.88}, cpc:{val:0.52,p50:0.58}, cpm:{val:9.20,p50:9.50}, pct_purchases:{val:2.4,p50:2.8}, purchase_rate:{val:0.60,p50:0.70}, cost_per_purchase:{val:55.0,p50:50.0} },
+            sd: { ctr:{val:0.31,p50:0.38}, cpc:{val:0.19,p50:0.24}, cpm:{val:5.90,p50:6.80}, pct_purchases:{val:1.8,p50:2.1}, purchase_rate:{val:0.45,p50:0.53}, cost_per_purchase:{val:68.0,p50:60.0}, completion_rate:{val:30.5,p50:33.0}, cost_per_completed_view:{val:0.158,p50:0.145} },
+            children: {}
+          }
+        }
+      },
+      "Skin Care": {
+        sp: { ctr:{val:1.34,p50:1.25}, cpc:{val:0.61,p50:0.68} },
+        sb: { ctr:{val:0.95,p50:0.88}, cpc:{val:0.78,p50:0.85}, cpm:{val:9.50,p50:10.20}, pct_purchases:{val:3.5,p50:3.0}, purchase_rate:{val:0.88,p50:0.75}, cost_per_purchase:{val:38.5,p50:44.0} },
+        sd: { ctr:{val:0.38,p50:0.35}, cpc:{val:0.29,p50:0.33}, cpm:{val:5.80,p50:6.50}, pct_purchases:{val:2.8,p50:2.4}, purchase_rate:{val:0.70,p50:0.60}, cost_per_purchase:{val:48.5,p50:55.0}, completion_rate:{val:38.2,p50:34.0}, cost_per_completed_view:{val:0.108,p50:0.128} },
+        children: {
+          "Moisturizers": {
+            sp: { ctr:{val:1.52,p50:1.40}, cpc:{val:0.72,p50:0.80} },
+            sb: { ctr:{val:1.08,p50:0.98}, cpc:{val:0.91,p50:1.00}, cpm:{val:8.80,p50:9.80}, pct_purchases:{val:4.2,p50:3.5}, purchase_rate:{val:1.05,p50:0.88}, cost_per_purchase:{val:32.0,p50:38.0} },
+            sd: { ctr:{val:0.44,p50:0.40}, cpc:{val:0.35,p50:0.40}, cpm:{val:5.20,p50:6.10}, pct_purchases:{val:3.5,p50:2.9}, purchase_rate:{val:0.88,p50:0.73}, cost_per_purchase:{val:40.0,p50:48.0}, completion_rate:{val:42.8,p50:37.0}, cost_per_completed_view:{val:0.092,p50:0.115} },
+            children: {}
+          },
+          "Serums": {
+            sp: { ctr:{val:1.18,p50:1.30}, cpc:{val:0.88,p50:0.95} },
+            sb: { ctr:{val:0.84,p50:0.92}, cpc:{val:1.12,p50:1.22}, cpm:{val:10.50,p50:11.20}, pct_purchases:{val:2.9,p50:3.2}, purchase_rate:{val:0.73,p50:0.80}, cost_per_purchase:{val:44.0,p50:42.0} },
+            sd: { ctr:{val:0.32,p50:0.38}, cpc:{val:0.41,p50:0.48}, cpm:{val:6.50,p50:7.20}, pct_purchases:{val:2.2,p50:2.8}, purchase_rate:{val:0.55,p50:0.70}, cost_per_purchase:{val:58.0,p50:52.0}, completion_rate:{val:34.5,p50:38.0}, cost_per_completed_view:{val:0.125,p50:0.115} },
+            children: {}
+          }
+        }
+      }
+    }
+  },
+  "US Beauty & Personal Care": {
+    sp: { ctr:{val:1.08,p50:1.00}, cpc:{val:0.48,p50:0.54} },
+    sb: { ctr:{val:0.76,p50:0.72}, cpc:{val:0.62,p50:0.68}, cpm:{val:8.20,p50:8.80}, pct_purchases:{val:2.8,p50:2.5}, purchase_rate:{val:0.70,p50:0.63}, cost_per_purchase:{val:48.0,p50:52.0} },
+    sd: { ctr:{val:0.29,p50:0.28}, cpc:{val:0.24,p50:0.28}, cpm:{val:5.50,p50:6.20}, pct_purchases:{val:2.0,p50:1.7}, purchase_rate:{val:0.50,p50:0.43}, cost_per_purchase:{val:60.0,p50:68.0}, completion_rate:{val:33.5,p50:30.5}, cost_per_completed_view:{val:0.128,p50:0.148} },
+    children: {
+      "Hair Care": {
+        sp: { ctr:{val:1.89,p50:1.70}, cpc:{val:0.35,p50:0.40} },
+        sb: { ctr:{val:1.32,p50:1.20}, cpc:{val:0.48,p50:0.54}, cpm:{val:6.50,p50:7.40}, pct_purchases:{val:4.2,p50:3.6}, purchase_rate:{val:1.05,p50:0.90}, cost_per_purchase:{val:35.0,p50:40.0} },
+        sd: { ctr:{val:0.52,p50:0.48}, cpc:{val:0.18,p50:0.22}, cpm:{val:4.30,p50:5.10}, pct_purchases:{val:3.2,p50:2.7}, purchase_rate:{val:0.80,p50:0.68}, cost_per_purchase:{val:45.0,p50:52.0}, completion_rate:{val:40.1,p50:35.0}, cost_per_completed_view:{val:0.098,p50:0.125} },
+        children: {
+          "Styling Tools": {
+            sp: { ctr:{val:2.88,p50:2.30}, cpc:{val:0.58,p50:0.65} },
+            sb: { ctr:{val:1.95,p50:1.75}, cpc:{val:0.72,p50:0.80}, cpm:{val:5.60,p50:6.80}, pct_purchases:{val:5.5,p50:4.8}, purchase_rate:{val:1.38,p50:1.20}, cost_per_purchase:{val:26.0,p50:31.0} },
+            sd: { ctr:{val:0.78,p50:0.72}, cpc:{val:0.28,p50:0.34}, cpm:{val:3.90,p50:4.80}, pct_purchases:{val:4.8,p50:3.6}, purchase_rate:{val:1.20,p50:0.90}, cost_per_purchase:{val:30.5,p50:38.0}, completion_rate:{val:46.5,p50:39.0}, cost_per_completed_view:{val:0.076,p50:0.102} },
+            children: {}
+          }
+        }
+      },
+      "Personal Care": {
+        sp: { ctr:{val:0.94,p50:0.88}, cpc:{val:0.55,p50:0.62} },
+        sb: { ctr:{val:0.67,p50:0.62}, cpc:{val:0.71,p50:0.78}, cpm:{val:9.10,p50:9.80}, pct_purchases:{val:2.2,p50:2.0}, purchase_rate:{val:0.55,p50:0.50}, cost_per_purchase:{val:52.0,p50:56.0} },
+        sd: { ctr:{val:0.25,p50:0.24}, cpc:{val:0.27,p50:0.32}, cpm:{val:6.10,p50:6.90}, pct_purchases:{val:1.6,p50:1.5}, purchase_rate:{val:0.40,p50:0.38}, cost_per_purchase:{val:68.0,p50:72.0}, completion_rate:{val:30.8,p50:28.5}, cost_per_completed_view:{val:0.145,p50:0.158} },
+        children: {}
+      }
+    }
+  }
+};
+
+// Dolphin — Maytronics US profile (slightly different perf vs Backyard)
+const DATA_DOLPHIN_MAYTRONICS = {
+  "Beauty & Personal Care": {
+    sp: { ctr:{val:0.98,p50:1.05}, cpc:{val:0.61,p50:0.58} },
+    sb: { ctr:{val:0.72,p50:0.80}, cpc:{val:0.74,p50:0.72}, cpm:{val:9.10,p50:9.20}, pct_purchases:{val:2.5,p50:2.8}, purchase_rate:{val:0.62,p50:0.70}, cost_per_purchase:{val:51.0,p50:48.0} },
+    sd: { ctr:{val:0.28,p50:0.30}, cpc:{val:0.28,p50:0.25}, cpm:{val:6.30,p50:6.10}, pct_purchases:{val:1.7,p50:1.8}, purchase_rate:{val:0.48,p50:0.55}, cost_per_purchase:{val:62.0,p50:55.0}, completion_rate:{val:30.5,p50:32.0}, cost_per_completed_view:{val:0.158,p50:0.150} },
+    children: {
+      "Hair Care": {
+        sp: { ctr:{val:1.75,p50:1.80}, cpc:{val:0.49,p50:0.45} },
+        sb: { ctr:{val:1.18,p50:1.20}, cpc:{val:0.64,p50:0.60}, cpm:{val:7.60,p50:7.90}, pct_purchases:{val:3.5,p50:3.9}, purchase_rate:{val:0.88,p50:1.00}, cost_per_purchase:{val:40.0,p50:38.0} },
+        sd: { ctr:{val:0.49,p50:0.55}, cpc:{val:0.24,p50:0.22}, cpm:{val:5.10,p50:5.20}, pct_purchases:{val:2.8,p50:2.8}, purchase_rate:{val:0.70,p50:0.75}, cost_per_purchase:{val:50.0,p50:42.0}, completion_rate:{val:36.5,p50:36.0}, cost_per_completed_view:{val:0.118,p50:0.130} },
+        children: {}
+      },
+      "Skin Care": {
+        sp: { ctr:{val:1.10,p50:1.25}, cpc:{val:0.72,p50:0.68} },
+        sb: { ctr:{val:0.78,p50:0.88}, cpc:{val:0.88,p50:0.85}, cpm:{val:10.10,p50:10.20}, pct_purchases:{val:2.8,p50:3.0}, purchase_rate:{val:0.70,p50:0.75}, cost_per_purchase:{val:47.0,p50:44.0} },
+        sd: { ctr:{val:0.31,p50:0.35}, cpc:{val:0.31,p50:0.33}, cpm:{val:6.20,p50:6.50}, pct_purchases:{val:2.2,p50:2.4}, purchase_rate:{val:0.56,p50:0.60}, cost_per_purchase:{val:58.0,p50:55.0}, completion_rate:{val:35.0,p50:34.0}, cost_per_completed_view:{val:0.135,p50:0.128} },
+        children: {}
+      }
+    }
+  },
+  "US Beauty & Personal Care": {
+    sp: { ctr:{val:0.88,p50:1.00}, cpc:{val:0.55,p50:0.54} },
+    sb: { ctr:{val:0.62,p50:0.72}, cpc:{val:0.71,p50:0.68}, cpm:{val:9.00,p50:8.80}, pct_purchases:{val:2.1,p50:2.5}, purchase_rate:{val:0.55,p50:0.63}, cost_per_purchase:{val:56.0,p50:52.0} },
+    sd: { ctr:{val:0.24,p50:0.28}, cpc:{val:0.30,p50:0.28}, cpm:{val:6.10,p50:6.20}, pct_purchases:{val:1.5,p50:1.7}, purchase_rate:{val:0.38,p50:0.43}, cost_per_purchase:{val:71.0,p50:68.0}, completion_rate:{val:29.5,p50:30.5}, cost_per_completed_view:{val:0.152,p50:0.148} },
+    children: {}
+  }
+};
+
+// iRobot — single profile
+const DATA_IROBOT = {
+  "Robot Vacuums": {
+    sp: { ctr:{val:2.45,p50:2.10}, cpc:{val:0.92,p50:1.05} },
+    sb: { ctr:{val:1.68,p50:1.50}, cpc:{val:1.12,p50:1.25}, cpm:{val:12.50,p50:14.20}, pct_purchases:{val:5.8,p50:4.9}, purchase_rate:{val:1.45,p50:1.23}, cost_per_purchase:{val:28.5,p50:34.0} },
+    sd: { ctr:{val:0.72,p50:0.65}, cpc:{val:0.48,p50:0.55}, cpm:{val:7.80,p50:9.10}, pct_purchases:{val:4.2,p50:3.5}, purchase_rate:{val:1.05,p50:0.88}, cost_per_purchase:{val:38.0,p50:45.0}, completion_rate:{val:52.5,p50:46.0}, cost_per_completed_view:{val:0.068,p50:0.082} },
+    children: {
+      "Roomba Series": {
+        sp: { ctr:{val:3.12,p50:2.80}, cpc:{val:1.05,p50:1.18} },
+        sb: { ctr:{val:2.18,p50:1.90}, cpc:{val:1.35,p50:1.48}, cpm:{val:11.20,p50:13.50}, pct_purchases:{val:7.2,p50:6.1}, purchase_rate:{val:1.80,p50:1.52}, cost_per_purchase:{val:22.0,p50:28.0} },
+        sd: { ctr:{val:0.95,p50:0.85}, cpc:{val:0.58,p50:0.65}, cpm:{val:6.90,p50:8.20}, pct_purchases:{val:5.8,p50:4.8}, purchase_rate:{val:1.45,p50:1.20}, cost_per_purchase:{val:28.0,p50:36.0}, completion_rate:{val:61.2,p50:52.0}, cost_per_completed_view:{val:0.052,p50:0.068} },
+        children: {
+          "Roomba i Series": {
+            sp: { ctr:{val:3.58,p50:3.10}, cpc:{val:1.15,p50:1.28} },
+            sb: { ctr:{val:2.45,p50:2.20}, cpc:{val:1.48,p50:1.60}, cpm:{val:10.50,p50:12.80}, pct_purchases:{val:8.5,p50:7.0}, purchase_rate:{val:2.12,p50:1.75}, cost_per_purchase:{val:18.0,p50:24.0} },
+            sd: { ctr:{val:1.12,p50:1.00}, cpc:{val:0.65,p50:0.72}, cpm:{val:6.20,p50:7.50}, pct_purchases:{val:7.0,p50:5.8}, purchase_rate:{val:1.75,p50:1.45}, cost_per_purchase:{val:22.0,p50:30.0}, completion_rate:{val:68.5,p50:58.0}, cost_per_completed_view:{val:0.042,p50:0.058} },
+            children: {}
+          },
+          "Roomba j Series": {
+            sp: { ctr:{val:2.88,p50:2.80}, cpc:{val:1.02,p50:1.12} },
+            sb: { ctr:{val:1.95,p50:1.90}, cpc:{val:1.25,p50:1.38}, cpm:{val:11.80,p50:13.20}, pct_purchases:{val:6.2,p50:6.0}, purchase_rate:{val:1.55,p50:1.50}, cost_per_purchase:{val:25.0,p50:26.0} },
+            sd: { ctr:{val:0.82,p50:0.85}, cpc:{val:0.52,p50:0.60}, cpm:{val:7.50,p50:8.80}, pct_purchases:{val:4.8,p50:5.0}, purchase_rate:{val:1.20,p50:1.25}, cost_per_purchase:{val:32.0,p50:30.0}, completion_rate:{val:55.8,p50:52.0}, cost_per_completed_view:{val:0.060,p50:0.065} },
+            children: {}
+          }
+        }
+      },
+      "Braava Mops": {
+        sp: { ctr:{val:1.85,p50:1.65}, cpc:{val:0.78,p50:0.92} },
+        sb: { ctr:{val:1.25,p50:1.10}, cpc:{val:0.95,p50:1.08}, cpm:{val:13.50,p50:15.20}, pct_purchases:{val:4.2,p50:3.5}, purchase_rate:{val:1.05,p50:0.88}, cost_per_purchase:{val:35.0,p50:42.0} },
+        sd: { ctr:{val:0.55,p50:0.50}, cpc:{val:0.41,p50:0.48}, cpm:{val:8.90,p50:10.20}, pct_purchases:{val:3.0,p50:2.5}, purchase_rate:{val:0.75,p50:0.63}, cost_per_purchase:{val:48.0,p50:56.0}, completion_rate:{val:44.2,p50:40.0}, cost_per_completed_view:{val:0.078,p50:0.092} },
+        children: {}
+      }
+    }
+  },
+  "Smart Home Cleaning": {
+    sp: { ctr:{val:1.92,p50:1.85}, cpc:{val:0.85,p50:0.95} },
+    sb: { ctr:{val:1.32,p50:1.30}, cpc:{val:1.02,p50:1.12}, cpm:{val:13.80,p50:15.00}, pct_purchases:{val:4.5,p50:4.2}, purchase_rate:{val:1.13,p50:1.05}, cost_per_purchase:{val:32.0,p50:36.0} },
+    sd: { ctr:{val:0.58,p50:0.55}, cpc:{val:0.44,p50:0.50}, cpm:{val:8.50,p50:9.50}, pct_purchases:{val:3.5,p50:3.2}, purchase_rate:{val:0.88,p50:0.80}, cost_per_purchase:{val:42.0,p50:48.0}, completion_rate:{val:48.8,p50:44.0}, cost_per_completed_view:{val:0.072,p50:0.085} },
+    children: {}
+  }
+};
+
+// Dyson — two profiles
+const DATA_DYSON_DIRECT = {
+  "Vacuum Cleaners": {
+    sp: { ctr:{val:1.88,p50:1.70}, cpc:{val:1.42,p50:1.55} },
+    sb: { ctr:{val:1.28,p50:1.18}, cpc:{val:1.68,p50:1.80}, cpm:{val:18.50,p50:20.10}, pct_purchases:{val:4.8,p50:4.2}, purchase_rate:{val:1.20,p50:1.05}, cost_per_purchase:{val:45.0,p50:52.0} },
+    sd: { ctr:{val:0.55,p50:0.50}, cpc:{val:0.72,p50:0.80}, cpm:{val:11.20,p50:12.50}, pct_purchases:{val:3.5,p50:3.0}, purchase_rate:{val:0.88,p50:0.75}, cost_per_purchase:{val:58.0,p50:68.0}, completion_rate:{val:48.5,p50:43.0}, cost_per_completed_view:{val:0.095,p50:0.112} },
+    children: {
+      "Cordless Vacuums": {
+        sp: { ctr:{val:2.35,p50:2.10}, cpc:{val:1.58,p50:1.72} },
+        sb: { ctr:{val:1.62,p50:1.48}, cpc:{val:1.88,p50:2.05}, cpm:{val:16.80,p50:19.20}, pct_purchases:{val:6.2,p50:5.5}, purchase_rate:{val:1.55,p50:1.38}, cost_per_purchase:{val:35.0,p50:42.0} },
+        sd: { ctr:{val:0.72,p50:0.65}, cpc:{val:0.85,p50:0.95}, cpm:{val:10.20,p50:11.80}, pct_purchases:{val:4.8,p50:4.0}, purchase_rate:{val:1.20,p50:1.00}, cost_per_purchase:{val:46.0,p50:55.0}, completion_rate:{val:58.2,p50:50.0}, cost_per_completed_view:{val:0.078,p50:0.095} },
+        children: {
+          "V15 Series": {
+            sp: { ctr:{val:3.12,p50:2.80}, cpc:{val:1.72,p50:1.88} },
+            sb: { ctr:{val:2.15,p50:1.90}, cpc:{val:2.05,p50:2.25}, cpm:{val:15.50,p50:18.20}, pct_purchases:{val:7.8,p50:6.8}, purchase_rate:{val:1.95,p50:1.70}, cost_per_purchase:{val:28.0,p50:35.0} },
+            sd: { ctr:{val:0.92,p50:0.82}, cpc:{val:0.95,p50:1.05}, cpm:{val:9.50,p50:11.20}, pct_purchases:{val:6.2,p50:5.2}, purchase_rate:{val:1.55,p50:1.30}, cost_per_purchase:{val:38.0,p50:46.0}, completion_rate:{val:65.5,p50:56.0}, cost_per_completed_view:{val:0.062,p50:0.078} },
+            children: {}
+          },
+          "V11 Series": {
+            sp: { ctr:{val:2.05,p50:2.10}, cpc:{val:1.48,p50:1.62} },
+            sb: { ctr:{val:1.42,p50:1.48}, cpc:{val:1.75,p50:1.90}, cpm:{val:17.50,p50:19.80}, pct_purchases:{val:5.2,p50:5.5}, purchase_rate:{val:1.30,p50:1.38}, cost_per_purchase:{val:40.0,p50:38.0} },
+            sd: { ctr:{val:0.62,p50:0.65}, cpc:{val:0.78,p50:0.88}, cpm:{val:10.80,p50:11.90}, pct_purchases:{val:4.0,p50:4.2}, purchase_rate:{val:1.00,p50:1.05}, cost_per_purchase:{val:52.0,p50:50.0}, completion_rate:{val:52.5,p50:52.0}, cost_per_completed_view:{val:0.088,p50:0.090} },
+            children: {}
+          }
+        }
+      },
+      "Upright Vacuums": {
+        sp: { ctr:{val:1.45,p50:1.55}, cpc:{val:1.28,p50:1.38} },
+        sb: { ctr:{val:0.98,p50:1.05}, cpc:{val:1.52,p50:1.62}, cpm:{val:19.80,p50:21.50}, pct_purchases:{val:3.5,p50:3.8}, purchase_rate:{val:0.88,p50:0.95}, cost_per_purchase:{val:55.0,p50:52.0} },
+        sd: { ctr:{val:0.42,p50:0.45}, cpc:{val:0.62,p50:0.70}, cpm:{val:12.20,p50:13.50}, pct_purchases:{val:2.8,p50:3.0}, purchase_rate:{val:0.70,p50:0.75}, cost_per_purchase:{val:68.0,p50:65.0}, completion_rate:{val:40.2,p50:42.0}, cost_per_completed_view:{val:0.110,p50:0.108} },
+        children: {}
+      }
+    }
+  },
+  "Air Purifiers": {
+    sp: { ctr:{val:1.52,p50:1.45}, cpc:{val:1.18,p50:1.28} },
+    sb: { ctr:{val:1.05,p50:1.00}, cpc:{val:1.42,p50:1.52}, cpm:{val:16.50,p50:18.20}, pct_purchases:{val:3.8,p50:3.5}, purchase_rate:{val:0.95,p50:0.88}, cost_per_purchase:{val:50.0,p50:56.0} },
+    sd: { ctr:{val:0.45,p50:0.42}, cpc:{val:0.62,p50:0.68}, cpm:{val:10.50,p50:11.80}, pct_purchases:{val:2.8,p50:2.5}, purchase_rate:{val:0.70,p50:0.63}, cost_per_purchase:{val:65.0,p50:72.0}, completion_rate:{val:44.5,p50:40.0}, cost_per_completed_view:{val:0.098,p50:0.112} },
+    children: {}
+  }
+};
+
+const DATA_DYSON_STORE = {
+  "Vacuum Cleaners": {
+    sp: { ctr:{val:1.62,p50:1.70}, cpc:{val:1.58,p50:1.55} },
+    sb: { ctr:{val:1.10,p50:1.18}, cpc:{val:1.85,p50:1.80}, cpm:{val:21.20,p50:20.10}, pct_purchases:{val:3.8,p50:4.2}, purchase_rate:{val:0.95,p50:1.05}, cost_per_purchase:{val:58.0,p50:52.0} },
+    sd: { ctr:{val:0.44,p50:0.50}, cpc:{val:0.85,p50:0.80}, cpm:{val:13.50,p50:12.50}, pct_purchases:{val:2.8,p50:3.0}, purchase_rate:{val:0.70,p50:0.75}, cost_per_purchase:{val:72.0,p50:68.0}, completion_rate:{val:40.5,p50:43.0}, cost_per_completed_view:{val:0.122,p50:0.112} },
+    children: {
+      "Cordless Vacuums": {
+        sp: { ctr:{val:2.05,p50:2.10}, cpc:{val:1.72,p50:1.72} },
+        sb: { ctr:{val:1.40,p50:1.48}, cpc:{val:2.05,p50:2.05}, cpm:{val:19.50,p50:19.20}, pct_purchases:{val:5.2,p50:5.5}, purchase_rate:{val:1.30,p50:1.38}, cost_per_purchase:{val:44.0,p50:42.0} },
+        sd: { ctr:{val:0.60,p50:0.65}, cpc:{val:0.92,p50:0.95}, cpm:{val:11.80,p50:11.80}, pct_purchases:{val:4.0,p50:4.0}, purchase_rate:{val:1.00,p50:1.00}, cost_per_purchase:{val:55.0,p50:55.0}, completion_rate:{val:50.5,p50:50.0}, cost_per_completed_view:{val:0.092,p50:0.095} },
+        children: {}
+      }
+    }
+  },
+  "Hair Care": {
+    sp: { ctr:{val:2.18,p50:1.95}, cpc:{val:1.05,p50:1.15} },
+    sb: { ctr:{val:1.52,p50:1.38}, cpc:{val:1.25,p50:1.38}, cpm:{val:14.80,p50:16.50}, pct_purchases:{val:5.5,p50:4.8}, purchase_rate:{val:1.38,p50:1.20}, cost_per_purchase:{val:38.0,p50:44.0} },
+    sd: { ctr:{val:0.65,p50:0.58}, cpc:{val:0.55,p50:0.62}, cpm:{val:9.20,p50:10.50}, pct_purchases:{val:4.2,p50:3.5}, purchase_rate:{val:1.05,p50:0.88}, cost_per_purchase:{val:48.0,p50:56.0}, completion_rate:{val:55.5,p50:48.0}, cost_per_completed_view:{val:0.072,p50:0.088} },
+    children: {}
+  }
+};
+
+// Shark — two profiles
+const DATA_SHARK_NINJA = {
+  "Vacuum Cleaners": {
+    sp: { ctr:{val:1.42,p50:1.35}, cpc:{val:0.68,p50:0.75} },
+    sb: { ctr:{val:0.98,p50:0.92}, cpc:{val:0.82,p50:0.90}, cpm:{val:10.50,p50:11.80}, pct_purchases:{val:3.8,p50:3.4}, purchase_rate:{val:0.95,p50:0.85}, cost_per_purchase:{val:42.0,p50:48.0} },
+    sd: { ctr:{val:0.42,p50:0.38}, cpc:{val:0.35,p50:0.40}, cpm:{val:6.80,p50:7.80}, pct_purchases:{val:2.8,p50:2.5}, purchase_rate:{val:0.70,p50:0.63}, cost_per_purchase:{val:55.0,p50:62.0}, completion_rate:{val:42.5,p50:38.0}, cost_per_completed_view:{val:0.088,p50:0.102} },
+    children: {
+      "Robot Vacuums": {
+        sp: { ctr:{val:2.12,p50:1.95}, cpc:{val:0.75,p50:0.85} },
+        sb: { ctr:{val:1.45,p50:1.35}, cpc:{val:0.92,p50:1.02}, cpm:{val:9.50,p50:11.20}, pct_purchases:{val:5.2,p50:4.5}, purchase_rate:{val:1.30,p50:1.13}, cost_per_purchase:{val:32.0,p50:38.0} },
+        sd: { ctr:{val:0.62,p50:0.56}, cpc:{val:0.40,p50:0.46}, cpm:{val:6.20,p50:7.20}, pct_purchases:{val:4.0,p50:3.5}, purchase_rate:{val:1.00,p50:0.88}, cost_per_purchase:{val:44.0,p50:52.0}, completion_rate:{val:52.2,p50:46.0}, cost_per_completed_view:{val:0.072,p50:0.086} },
+        children: {
+          "IQ Series": {
+            sp: { ctr:{val:2.65,p50:2.40}, cpc:{val:0.82,p50:0.92} },
+            sb: { ctr:{val:1.82,p50:1.68}, cpc:{val:1.02,p50:1.15}, cpm:{val:8.80,p50:10.50}, pct_purchases:{val:6.5,p50:5.8}, purchase_rate:{val:1.63,p50:1.45}, cost_per_purchase:{val:26.0,p50:32.0} },
+            sd: { ctr:{val:0.78,p50:0.70}, cpc:{val:0.45,p50:0.52}, cpm:{val:5.80,p50:6.90}, pct_purchases:{val:5.0,p50:4.4}, purchase_rate:{val:1.25,p50:1.10}, cost_per_purchase:{val:36.0,p50:44.0}, completion_rate:{val:60.5,p50:52.0}, cost_per_completed_view:{val:0.060,p50:0.074} },
+            children: {}
+          }
+        }
+      },
+      "Cordless Vacuums": {
+        sp: { ctr:{val:1.18,p50:1.25}, cpc:{val:0.58,p50:0.65} },
+        sb: { ctr:{val:0.82,p50:0.88}, cpc:{val:0.72,p50:0.80}, cpm:{val:11.20,p50:12.50}, pct_purchases:{val:2.8,p50:3.2}, purchase_rate:{val:0.70,p50:0.80}, cost_per_purchase:{val:52.0,p50:48.0} },
+        sd: { ctr:{val:0.35,p50:0.40}, cpc:{val:0.30,p50:0.35}, cpm:{val:7.50,p50:8.50}, pct_purchases:{val:2.2,p50:2.6}, purchase_rate:{val:0.55,p50:0.65}, cost_per_purchase:{val:65.0,p50:60.0}, completion_rate:{val:36.5,p50:38.0}, cost_per_completed_view:{val:0.102,p50:0.095} },
+        children: {}
+      }
+    }
+  },
+  "Steam Cleaners": {
+    sp: { ctr:{val:1.05,p50:1.12}, cpc:{val:0.52,p50:0.58} },
+    sb: { ctr:{val:0.72,p50:0.80}, cpc:{val:0.65,p50:0.72}, cpm:{val:9.20,p50:10.50}, pct_purchases:{val:2.8,p50:3.2}, purchase_rate:{val:0.70,p50:0.80}, cost_per_purchase:{val:48.0,p50:44.0} },
+    sd: { ctr:{val:0.32,p50:0.35}, cpc:{val:0.28,p50:0.32}, cpm:{val:6.10,p50:7.20}, pct_purchases:{val:2.0,p50:2.4}, purchase_rate:{val:0.50,p50:0.60}, cost_per_purchase:{val:62.0,p50:56.0}, completion_rate:{val:35.2,p50:38.0}, cost_per_completed_view:{val:0.110,p50:0.102} },
+    children: {}
+  }
+};
+
+const DATA_SHARK_CLEAN = {
+  "Vacuum Cleaners": {
+    sp: { ctr:{val:1.22,p50:1.35}, cpc:{val:0.80,p50:0.75} },
+    sb: { ctr:{val:0.85,p50:0.92}, cpc:{val:0.95,p50:0.90}, cpm:{val:12.20,p50:11.80}, pct_purchases:{val:3.2,p50:3.4}, purchase_rate:{val:0.80,p50:0.85}, cost_per_purchase:{val:52.0,p50:48.0} },
+    sd: { ctr:{val:0.35,p50:0.38}, cpc:{val:0.42,p50:0.40}, cpm:{val:8.50,p50:7.80}, pct_purchases:{val:2.2,p50:2.5}, purchase_rate:{val:0.55,p50:0.63}, cost_per_purchase:{val:65.0,p50:62.0}, completion_rate:{val:36.5,p50:38.0}, cost_per_completed_view:{val:0.112,p50:0.102} },
+    children: {
+      "Robot Vacuums": {
+        sp: { ctr:{val:1.85,p50:1.95}, cpc:{val:0.88,p50:0.85} },
+        sb: { ctr:{val:1.28,p50:1.35}, cpc:{val:1.05,p50:1.02}, cpm:{val:10.80,p50:11.20}, pct_purchases:{val:4.5,p50:4.5}, purchase_rate:{val:1.13,p50:1.13}, cost_per_purchase:{val:40.0,p50:38.0} },
+        sd: { ctr:{val:0.55,p50:0.56}, cpc:{val:0.48,p50:0.46}, cpm:{val:7.20,p50:7.20}, pct_purchases:{val:3.5,p50:3.5}, purchase_rate:{val:0.88,p50:0.88}, cost_per_purchase:{val:50.0,p50:52.0}, completion_rate:{val:46.5,p50:46.0}, cost_per_completed_view:{val:0.082,p50:0.086} },
+        children: {}
+      }
+    }
+  },
+  "Floor Care Accessories": {
+    sp: { ctr:{val:0.85,p50:0.95}, cpc:{val:0.42,p50:0.48} },
+    sb: { ctr:{val:0.58,p50:0.68}, cpc:{val:0.52,p50:0.58}, cpm:{val:8.20,p50:9.50}, pct_purchases:{val:2.0,p50:2.5}, purchase_rate:{val:0.50,p50:0.63}, cost_per_purchase:{val:58.0,p50:52.0} },
+    sd: { ctr:{val:0.25,p50:0.30}, cpc:{val:0.22,p50:0.26}, cpm:{val:5.50,p50:6.50}, pct_purchases:{val:1.5,p50:2.0}, purchase_rate:{val:0.38,p50:0.50}, cost_per_purchase:{val:72.0,p50:65.0}, completion_rate:{val:30.5,p50:34.0}, cost_per_completed_view:{val:0.128,p50:0.118} },
+    children: {}
+  }
+};
+
+// ── BRANDS master config ──────────────────────────────────────────────────────
+const BRANDS = [
+  {
+    id: 'dolphin',
+    name: 'Dolphin',
+    profiles: [
+      { id: 'backyard',   label: 'BackyardPoolSuperstore', data: DATA_DOLPHIN_BACKYARD },
+      { id: 'maytronics', label: 'Maytronics US',          data: DATA_DOLPHIN_MAYTRONICS },
+    ]
+  },
+  {
+    id: 'irobot',
+    name: 'iRobot',
+    profiles: [
+      { id: 'irobot_official', label: 'iRobot Official Store', data: DATA_IROBOT },
+    ]
+  },
+  {
+    id: 'dyson',
+    name: 'Dyson',
+    profiles: [
+      { id: 'dyson_direct', label: 'Dyson Direct',       data: DATA_DYSON_DIRECT },
+      { id: 'dyson_store',  label: 'Dyson Vacuum Store', data: DATA_DYSON_STORE },
+    ]
+  },
+  {
+    id: 'shark',
+    name: 'Shark',
+    profiles: [
+      { id: 'shark_ninja', label: 'SharkNinja Official', data: DATA_SHARK_NINJA },
+      { id: 'shark_clean', label: 'Shark Clean US',      data: DATA_SHARK_CLEAN },
+    ]
+  },
+];
+
+// ── Percentile tier — where does this value fall in the distribution? ────────
+// Pure bracket: t1=P0-P25, t2=P25-P50, t3=P50-P75, t4=P75-P100
+// No good/bad inversion — the label always reflects the actual percentile range.
+function getTier(val, p50) {
+  const p25 = p50 * 0.75, p75 = p50 * 1.25;
+  if (val <  p25) return 't1';
+  if (val <  p50) return 't2';
+  if (val <  p75) return 't3';
+  return 't4';
+}
+const TIER_CLS   = { t1:'tier-t1', t2:'tier-t2', t3:'tier-t3', t4:'tier-t4' };
+
+// Active benchmark percentile chosen by the user (P25 / P50 / P75)
+// Drives which baseline cells display in row-2 and how the delta is computed.
+let activeBenchmark = 'P50';
+const BENCHMARK_FACTOR = { P25: 0.75, P50: 1.0, P75: 1.25 };
+
+function getBenchmarkValue(p50) {
+  return p50 * (BENCHMARK_FACTOR[activeBenchmark] ?? 1.0);
+}
+
+// Pacvue 官方箭头 SVG（下降.svg）— 用 rotate(180) 得到上升方向
+const ARROW_PATH = `M2.69874 7.48511C2.97488 7.48511 3.19874 7.26125 3.19874 6.98511L3.19874 4.19539L4.1189 4.19539C4.50192 4.19539 4.74271 3.78237 4.55401 3.44906L2.74498 0.253665C2.5535 -0.0845587 2.06624 -0.0845582 1.87476 0.253666L0.0657266 3.44906C-0.122976 3.78237 0.117812 4.19539 0.500836 4.19539L1.42096 4.19539L1.42096 6.98511C1.42096 7.26125 1.64482 7.48511 1.92096 7.48511L2.69874 7.48511Z`;
+
+function arrowSVG(up) {
+  // 原图标为「下降」(down)，上升时旋转 180°
+  const inner = up
+    ? `<g transform="rotate(180,2.5,4)"><path fill-rule="evenodd" clip-rule="evenodd" d="${ARROW_PATH}" fill="currentColor"/></g>`
+    : `<path fill-rule="evenodd" clip-rule="evenodd" d="${ARROW_PATH}" fill="currentColor"/>`;
+  return `<svg width="5" height="8" viewBox="0 0 5 8" fill="none" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+
+const TIER_LABEL = { t1: 'P0–P25', t2: 'P25–P50', t3: 'P50–P75', t4: 'P75–P100' };
+
+function deltaSpan(val, bench, good) {
+  const pct = (val - bench) / bench * 100;
+  const isUp = pct >= 0;
+  const isGood = good === 'high' ? isUp : !isUp;
+  const cls = Math.abs(pct) < 1 ? 'neu' : isGood ? 'pos' : 'neg';
+  const sign = pct >= 0 ? '+' : '';
+  return `<span class="mc-delta ${cls}">${arrowSVG(isUp)}&nbsp;${sign}${pct.toFixed(1)}%</span>`;
+}
+
+// ── Figma 1040:26391 — cell renderer ─────────────────────────────────────────
+// Next tier label: "VS P25" / "VS P50" / "VS P75"
+function vsNextLabel(tier, good) {
+  if (good === 'high') {
+    if (tier === 't1') return 'VS P25';
+    if (tier === 't2') return 'VS P50';
+    if (tier === 't3') return 'VS P75';
+  } else {
+    if (tier === 't4') return 'VS P75';
+    if (tier === 't3') return 'VS P50';
+    if (tier === 't2') return 'VS P25';
+  }
+  return null; // already best tier
+}
+
+function vsNextDelta(val, p25, p50, p75, tier, good) {
+  let nextVal;
+  if (good === 'high') {
+    if (tier === 't1') nextVal = p25;
+    else if (tier === 't2') nextVal = p50;
+    else if (tier === 't3') nextVal = p75;
+    else return null;
+  } else {
+    if (tier === 't4') nextVal = p75;
+    else if (tier === 't3') nextVal = p50;
+    else if (tier === 't2') nextVal = p25;
+    else return null;
+  }
+  const pct = (nextVal - val) / Math.abs(val) * 100;
+  const isUp = pct >= 0;
+  const cls = Math.abs(pct) < 0.5 ? 'neu' : isUp ? 'pos' : 'neg';
+  const sign = pct >= 0 ? '+' : '';
+  return `<span class="mc-vs-d ${cls}">${sign}${pct.toFixed(1)}% ${arrowSVG(isUp)}</span>`;
+}
+
+function metricCellHTML(m, def, adType) {
+  const fc = def.cls ? ' ' + def.cls : '';
+  if (!m || !m[def.key]) return `<td class="td-m ${adType}-col${fc}"><div class="m-cell no-data"><span class="mc-val">—</span></div></td>`;
+  const { val, p50 } = m[def.key];
+  const p25 = p50 * 0.75, p75 = p50 * 1.25;
+  const tier = getTier(val, p50);
+  const vsLbl   = vsNextLabel(tier, def.good);
+  const vsDelta = vsLbl ? vsNextDelta(val, p25, p50, p75, tier, def.good) : null;
+  return `<td class="td-m ${adType}-col${fc}" data-tier="${tier}"
+      data-val="${val}" data-p50="${p50}" data-good="${def.good}"
+      data-label="${def.label}" data-adtype="${adType.toUpperCase()}">
+    <div class="m-cell">
+      <div class="mc-row1">
+        <div class="mc-row1-left">
+          <span class="mc-val">${def.fmt(val)}</span>
+          <span class="mc-tier tier-${tier}">${TIER_LABEL[tier]}</span>
+        </div>
+        ${vsDelta ? `<div class="mc-vs-next">
+          <span class="mc-vs-lbl">${vsLbl}</span>
+          ${vsDelta}
+        </div>` : ''}
+      </div>
+      <div class="mc-bm-row">
+        <div class="mc-bm-col">
+          <span class="mc-bm-lbl">P25</span>
+          <span class="mc-bm-val">${def.fmt(p25)}</span>
+        </div>
+        <div class="mc-bm-col">
+          <span class="mc-bm-lbl">P50</span>
+          <span class="mc-bm-val">${def.fmt(p50)}</span>
+        </div>
+        <div class="mc-bm-col">
+          <span class="mc-bm-lbl">P75</span>
+          <span class="mc-bm-val">${def.fmt(p75)}</span>
+        </div>
+      </div>
+    </div>
+  </td>`;
+}
+
+function buildCells(node) {
+  return ['sp','sb','sd'].map(t => METRICS[t].map(d => metricCellHTML(node[t], d, t)).join('')).join('');
+}
+
+// ── Table header HTML (per-brand depth level) ────────────────────────────────
+function buildDepthRow(depthLevel) {
+  return [1,2,3,4].map((d, i) =>
+    (i > 0 ? `<span class="cat-depth-sep">/</span>` : '') +
+    `<button class="cat-depth-btn${d === depthLevel ? ' active' : ''}" data-d="${d}">L${d}</button>`
+  ).join('');
+}
+
+function buildTableHeaderHTML(depthLevel = 4) {
+  const INFO_SVG = `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/>
+    <path d="M8 7.2v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    <circle cx="8" cy="5.2" r="0.65" fill="currentColor"/>
+  </svg>`;
+  const depthBtns = buildDepthRow(depthLevel);
+  return `
+  <thead>
+    <tr>
+      <th class="th-cat-group">
+        <div class="cat-header-title">
+          Category Layer
+          <span class="cat-header-info">${INFO_SVG}</span>
+        </div>
+      </th>
+      <th class="th-sp-group" colspan="2"><div class="group-label">SP</div></th>
+      <th class="th-sb-group" colspan="6"><div class="group-label">SB</div></th>
+      <th class="th-sd-group" colspan="8"><div class="group-label">SD</div></th>
+    </tr>
+    <tr>
+      <th class="th-cat-depth">
+        <div class="cat-depth-row">${depthBtns}</div>
+      </th>
+      <th class="th-m sp-col first-in-group">CTR</th>
+      <th class="th-m sp-col">CPC</th>
+      <th class="th-m sb-col first-in-group">CTR</th>
+      <th class="th-m sb-col">CPC</th>
+      <th class="th-m sb-col">CPM</th>
+      <th class="th-m sb-col">% Purchases</th>
+      <th class="th-m sb-col">Purchase Rate</th>
+      <th class="th-m sb-col">Cost / Purchase</th>
+      <th class="th-m sd-col first-in-group">CTR</th>
+      <th class="th-m sd-col">CPC</th>
+      <th class="th-m sd-col">CPM</th>
+      <th class="th-m sd-col">% Purchases</th>
+      <th class="th-m sd-col">Purchase Rate</th>
+      <th class="th-m sd-col">Cost / Purchase</th>
+      <th class="th-m sd-col">Completion Rate</th>
+      <th class="th-m sd-col">Cost / Completed View</th>
+    </tr>
+  </thead>`;
+}
+const TABLE_HEADER_HTML = buildTableHeaderHTML();
+
+// ── Build brand card DOM ──────────────────────────────────────────────────────
+function buildBrandCard(brand) {
+  const card = document.createElement('div');
+  card.className = 'table-card';
+  card.dataset.brandId = brand.id;
+
+  const multiProfile = brand.profiles.length > 1;
+
+  // brand header
+  const header = document.createElement('div');
+  header.className = 'brand-header';
+
+  if (multiProfile) {
+    header.innerHTML = `
+      <span class="brand-title">${brand.name}</span>
+      <div class="profile-tabs">
+        ${brand.profiles.map((p, i) =>
+          `<button class="profile-tab${i === 0 ? ' active' : ''}" data-profile-id="${p.id}">${p.label}</button>`
+        ).join('')}
+      </div>`;
+  } else {
+    header.innerHTML = `
+      <span class="brand-title">${brand.name}</span>
+      <span class="brand-profile-label">${brand.profiles[0].label}</span>`;
+  }
+
+  card.appendChild(header);
+
+  // tier-bar — between header and table (scoped to this brand)
+  const tierBar = document.createElement('div');
+  tierBar.className = 'tier-bar';
+  tierBar.dataset.brandId = brand.id;
+  tierBar.innerHTML = `
+    <span class="tier-bar-label">Distribution</span>
+    <div class="tier-chip tc-t1" data-tier="t1"><span>P0–P25</span></div>
+    <div class="tier-chip tc-t2" data-tier="t2"><span>P25–P50</span></div>
+    <div class="tier-chip tc-t3" data-tier="t3"><span>P50–P75</span></div>
+    <div class="tier-chip tc-t4" data-tier="t4"><span>P75–P100</span></div>
+    <button class="tier-bar-reset" data-brand-id="${brand.id}">✕ Clear filter</button>`;
+  card.appendChild(tierBar);
+
+  // table scroll
+  const scroll = document.createElement('div');
+  scroll.className = 'table-scroll';
+
+  const table = document.createElement('table');
+  table.className = 'matrix';
+  table.id = `mainTable-${brand.id}`;
+  table.innerHTML = buildTableHeaderHTML(brandState[brand.id].depthLevel) + `<tbody id="tableBody-${brand.id}"></tbody>`;
+  scroll.appendChild(table);
+  card.appendChild(scroll);
+
+  return card;
+}
+
+// ── Per-brand state ───────────────────────────────────────────────────────────
+const brandState = {};
+
+BRANDS.forEach(brand => {
+  brandState[brand.id] = {
+    activeProfileId: brand.profiles[0].id,
+    expanded: new Set(),
+    depthLevel: 4,
+  };
+});
+
+// ── Flatten rows for a data tree ──────────────────────────────────────────────
+function flattenVisible(dataObj, level, parentPath, parentId, expandedSet) {
+  const rows = [];
+  Object.keys(dataObj).forEach((name, idx) => {
+    const node = dataObj[name];
+    const id   = parentId + '/' + idx;
+    const path = [...parentPath, name];
+    const hasChildren = node.children && Object.keys(node.children).length > 0;
+    const isExpanded  = expandedSet.has(id);
+    rows.push({ id, name, level, path, node, hasChildren, isExpanded });
+    if (hasChildren && isExpanded) rows.push(...flattenVisible(node.children, level + 1, path, id, expandedSet));
+  });
+  return rows;
+}
+
+// ── Render a single brand's table ─────────────────────────────────────────────
+function renderBrand(brandId) {
+  const brand = BRANDS.find(b => b.id === brandId);
+  const state = brandState[brandId];
+  const profile = brand.profiles.find(p => p.id === state.activeProfileId);
+  const tbody = document.getElementById(`tableBody-${brandId}`);
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+  const rows = flattenVisible(profile.data, 1, [], `${brandId}-root`, state.expanded);
+  let lastL1 = null;
+
+  rows.forEach(({ id, name, level, node, hasChildren, isExpanded }) => {
+    const tr = document.createElement('tr');
+    tr.className = `data-row l${level}-row`;
+    if (level === 1 && lastL1 !== null) tr.classList.add('l1-sep');
+    if (level === 1) lastL1 = name;
+
+    let indentHTML = '';
+    for (let i = 1; i < level; i++) indentHTML += `<div class="indent-block"></div>`;
+
+    const tdCat = document.createElement('td');
+    tdCat.className = 'td-cat';
+    tdCat.innerHTML = `
+      <div class="cat-inner">
+        <div class="indent-blocks">${indentHTML}</div>
+        <div class="row-toggle ${hasChildren ? (isExpanded ? 'open' : '') : 'leaf'}" data-id="${id}" data-brand="${brandId}">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 2l4 3-4 3"/>
+          </svg>
+        </div>
+        ${layerBadgeHTML(level)}
+        <div class="cat-name-wrap"><div class="cat-name">${name}</div></div>
+      </div>`;
+    tr.appendChild(tdCat);
+    tr.innerHTML += buildCells(node);
+    tbody.appendChild(tr);
+  });
+
+  // attach toggle handlers
+  tbody.querySelectorAll('.row-toggle:not(.leaf)').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id  = btn.dataset.id;
+      const bid = btn.dataset.brand;
+      const exp = brandState[bid].expanded;
+      if (exp.has(id)) {
+        [...exp].forEach(k => { if (k === id || k.startsWith(id + '/')) exp.delete(k); });
+      } else {
+        exp.add(id);
+      }
+      renderBrand(bid);
+    });
+  });
+
+  reinjectThLabels(brandId);
+}
+
+function renderAll() {
+  BRANDS.forEach(b => renderBrand(b.id));
+  resetAllTierFilters();
+  document.getElementById('rowCount').innerHTML =
+    `<strong>${document.querySelectorAll('.data-row').length}</strong> categories shown`;
+}
+
+function render() { renderAll(); }
+
+// ── Build and mount all brand cards ──────────────────────────────────────────
+const brandContainer = document.getElementById('brandContainer');
+BRANDS.forEach(brand => {
+  const card = buildBrandCard(brand);
+  brandContainer.appendChild(card);
+
+  // profile tab click
+  card.querySelectorAll('.profile-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      card.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      brandState[brand.id].activeProfileId = tab.dataset.profileId;
+      brandState[brand.id].expanded = new Set();
+      renderBrand(brand.id);
+    });
+  });
+});
+
+// ── Expand/Collapse all (applies to all brands) ───────────────────────────────
+function getAllIds(dataObj, parentId, expandedSet) {
+  Object.keys(dataObj).forEach((name, idx) => {
+    const node = dataObj[name];
+    const id = parentId + '/' + idx;
+    if (node.children && Object.keys(node.children).length > 0) {
+      expandedSet.add(id);
+      getAllIds(node.children, id, expandedSet);
+    }
+  });
+}
+
+document.getElementById('expandAll').addEventListener('click', () => {
+  BRANDS.forEach(brand => {
+    const state = brandState[brand.id];
+    const profile = brand.profiles.find(p => p.id === state.activeProfileId);
+    getAllIds(profile.data, `${brand.id}-root`, state.expanded);
+    renderBrand(brand.id);
+  });
+});
+
+document.getElementById('collapseAll').addEventListener('click', () => {
+  BRANDS.forEach(brand => {
+    brandState[brand.id].expanded = new Set();
+    renderBrand(brand.id);
+  });
+});
+
+// ── Depth filter via Category Layer buttons in table headers ──────────────────
+function applyDepthFilter(brandId, maxDepth) {
+  const state = brandState[brandId];
+  state.depthLevel = maxDepth;
+
+  // Update only this brand's header depth buttons
+  const card = document.querySelector(`.table-card[data-brand-id="${brandId}"]`);
+  const th = card && card.querySelector('.th-cat-depth');
+  if (th) th.innerHTML = `<div class="cat-depth-row">${buildDepthRow(maxDepth)}</div>`;
+
+  // Expand/collapse rows for this brand only
+  const profile = BRANDS.find(b => b.id === brandId)
+    .profiles.find(p => p.id === state.activeProfileId);
+  state.expanded = new Set();
+  function addUpTo(dataObj, parentId, currentDepth) {
+    if (currentDepth >= maxDepth) return;
+    Object.keys(dataObj).forEach((name, idx) => {
+      const node = dataObj[name];
+      const id = parentId + '/' + idx;
+      if (node.children && Object.keys(node.children).length > 0) {
+        state.expanded.add(id);
+        addUpTo(node.children, id, currentDepth + 1);
+      }
+    });
+  }
+  addUpTo(profile.data, `${brandId}-root`, 1);
+  renderBrand(brandId);
+}
+
+document.getElementById('brandContainer').addEventListener('click', e => {
+  const btn = e.target.closest('.cat-depth-btn');
+  if (!btn) return;
+  const card = btn.closest('.table-card');
+  if (!card) return;
+  applyDepthFilter(card.dataset.brandId, parseInt(btn.dataset.d, 10));
+});
+
+// ── Ad-type column visibility ─────────────────────────────────────────────────
+const AD_TYPES = ['sp', 'sb', 'sd'];
+
+function setAdTypeVisibility(visibleSet) {
+  document.querySelectorAll('.matrix').forEach(tbl => {
+    AD_TYPES.forEach(at => tbl.classList.toggle('hide-' + at, !visibleSet.has(at)));
+  });
+  const allOn = AD_TYPES.every(at => visibleSet.has(at));
+  document.querySelectorAll('.filter-seg .seg-btn').forEach(btn => {
+    const label = btn.textContent.trim().toLowerCase();
+    btn.classList.toggle('active', label === 'all' ? allOn : (!allOn && visibleSet.has(label)));
+  });
+}
+
+document.querySelectorAll('.filter-seg .seg-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const label = btn.textContent.trim().toLowerCase();
+    setAdTypeVisibility(label === 'all' ? new Set(AD_TYPES) : new Set([label]));
+  });
+});
+
+// ── Crosshair hover — delegated to brandContainer ────────────────────────────
+(function initCrosshair() {
+  const container = document.getElementById('brandContainer');
+  let currentTbody = null;
+
+  function clearCrosshair() {
+    if (!currentTbody) return;
+    currentTbody.querySelectorAll('.row-hl,.col-hl,.cell-hl').forEach(el =>
+      el.classList.remove('row-hl','col-hl','cell-hl'));
+    currentTbody = null;
+  }
+
+  container.addEventListener('mouseover', e => {
+    const td = e.target.closest('td');
+    if (!td) return;
+    const tbody = td.closest('tbody');
+    if (!tbody) return;
+    if (tbody !== currentTbody) clearCrosshair();
+    currentTbody = tbody;
+
+    tbody.querySelectorAll('.row-hl,.col-hl,.cell-hl').forEach(el =>
+      el.classList.remove('row-hl','col-hl','cell-hl'));
+
+    const tr = td.closest('tr');
+    const colIdx = [...tr.cells].indexOf(td);
+    tr.classList.add('row-hl');
+    tbody.querySelectorAll('tr').forEach(row => {
+      const cell = row.cells[colIdx];
+      if (cell) cell.classList.add('col-hl');
+    });
+
+    td.classList.add('cell-hl');
+  });
+
+  container.addEventListener('mouseleave', clearCrosshair);
+})();
+
+// ── Tier filter (per-brand) ───────────────────────────────────────────────────
+// Each brand's Distribution chips toggle highlighting ONLY inside that brand's
+// own table — no cross-brand side-effects.
+const activeTierByBrand = {};
+
+function clearTierFilterFor(card) {
+  const brandId = card.dataset.brandId;
+  activeTierByBrand[brandId] = null;
+  card.querySelector('.matrix')?.classList.remove('filtering');
+  card.querySelectorAll('.td-m').forEach(td => td.classList.remove('tier-match'));
+  card.querySelectorAll('.tier-chip').forEach(c => c.classList.remove('active','inactive'));
+  card.querySelector('.tier-bar-reset')?.classList.remove('visible');
+}
+
+function applyTierFilterIn(card, tier) {
+  const brandId = card.dataset.brandId;
+  if (activeTierByBrand[brandId] === tier) {
+    clearTierFilterFor(card);
+    return;
+  }
+  activeTierByBrand[brandId] = tier;
+  card.querySelector('.matrix')?.classList.add('filtering');
+  card.querySelectorAll('.td-m').forEach(td => {
+    td.classList.toggle('tier-match', td.dataset.tier === tier);
+  });
+  card.querySelectorAll('.tier-chip').forEach(c => {
+    c.classList.toggle('active',   c.dataset.tier === tier);
+    c.classList.toggle('inactive', c.dataset.tier !== tier);
+  });
+  card.querySelector('.tier-bar-reset')?.classList.add('visible');
+}
+
+// Compatibility shim: renderAll() still calls activeTier = null;
+// after re-render we reset filter state on every brand card.
+let activeTier = null;
+function resetAllTierFilters() {
+  document.querySelectorAll('.table-card').forEach(card => clearTierFilterFor(card));
+}
+
+// event delegation: scope each interaction to the .table-card that owns it
+document.getElementById('brandContainer').addEventListener('click', e => {
+  const card = e.target.closest('.table-card');
+  if (!card) return;
+  const chip = e.target.closest('.tier-chip');
+  if (chip) { applyTierFilterIn(card, chip.dataset.tier); return; }
+  const reset = e.target.closest('.tier-bar-reset');
+  if (reset) clearTierFilterFor(card);
+});
+
+
+// Default: expand all layers for every brand on load
+BRANDS.forEach(brand => {
+  const state = brandState[brand.id];
+  const profile = brand.profiles.find(p => p.id === state.activeProfileId);
+  getAllIds(profile.data, `${brand.id}-root`, state.expanded);
+});
+
+renderAll();
+
+// ── Cell hover tooltip + click to view details ────────────────────────────────
+(function initCellTooltip() {
+  const tip = document.createElement('div');
+  tip.id = 'cell-tooltip';
+  document.body.appendChild(tip);
+
+  function getFmt(adtype, label) {
+    const list = METRICS[adtype.toLowerCase()] || [];
+    const def = list.find(d => d.label === label);
+    return def ? def.fmt : v => String(v);
+  }
+
+  // Returns delta row HTML: "[delta% + arrow]  [bench value]"
+  function pctRowHTML(pKey, val, bench, good, fmt, isHighlight) {
+    const pct = (val - bench) / bench * 100;
+    const isUp = pct >= 0;
+    const isGood = good === 'high' ? isUp : !isUp;
+    const cls = Math.abs(pct) < 1 ? 'neu' : isGood ? 'pos' : 'neg';
+    const sign = pct >= 0 ? '+' : '';
+    const hlClass = isHighlight ? ' tt-active' : '';
+    // Reuse ARROW_PATH from arrowSVG
+    const innerSvg = isUp
+      ? `<g transform="rotate(180,2.5,4)"><path fill-rule="evenodd" clip-rule="evenodd" d="${ARROW_PATH}" fill="currentColor"/></g>`
+      : `<path fill-rule="evenodd" clip-rule="evenodd" d="${ARROW_PATH}" fill="currentColor"/>`;
+    const svg = `<svg width="5" height="8" viewBox="0 0 5 8" fill="none" xmlns="http://www.w3.org/2000/svg">${innerSvg}</svg>`;
+    return `<div class="tt-pct-row">
+      <span class="tt-pct-label${hlClass}">${pKey}</span>
+      <div class="tt-pct-right">
+        <span class="tt-pct-delta ${cls}${hlClass}">${sign}${pct.toFixed(1)}% ${svg}</span>
+        <span class="tt-pct-val${hlClass}">${fmt(bench)}</span>
+      </div>
+    </div>`;
+  }
+
+  // The "highlight" row = upper boundary of the user's tier
+  const HIGHLIGHT_MAP = { t1:'P25', t2:'P50', t3:'P75', t4:'P75' };
+  const TIER_LABEL = { t1:'P0–P25', t2:'P25–P50', t3:'P50–P75', t4:'P75–P100' };
+
+  function showTip(td, e) {
+    const val    = parseFloat(td.dataset.val);
+    const p50    = parseFloat(td.dataset.p50);
+    const good   = td.dataset.good;
+    const label  = td.dataset.label;
+    const adtype = td.dataset.adtype;
+    const tier   = td.dataset.tier;
+    const fmt    = getFmt(adtype, label);
+    const p25 = p50 * 0.75, p75 = p50 * 1.25;
+    const highlightKey = HIGHLIGHT_MAP[tier] || 'P50';
+
+    const pctRows = ['P25','P50','P75'].map(pKey => {
+      const bench = { P25: p25, P50: p50, P75: p75 }[pKey];
+      return pctRowHTML(pKey, val, bench, good, fmt, pKey === highlightKey);
+    }).join('');
+
+    tip.innerHTML = `
+      <div class="tt-header">
+        <div class="tt-header-row1">
+          <span class="tt-metric">${label}</span>
+          <span class="tt-val">${fmt(val)}</span>
+        </div>
+        <span class="tt-tier-badge tier-${tier}">${TIER_LABEL[tier] || ''}</span>
+      </div>
+      <div class="tt-divider"></div>
+      <div class="tt-pct-rows">${pctRows}</div>`;
+    tip.classList.add('visible');
+    positionTip(e);
+  }
+
+  function positionTip(e) {
+    const margin = 12;
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let x = e.clientX + margin, y = e.clientY + margin;
+    if (x + tw > vw - margin) x = e.clientX - tw - margin;
+    if (y + th > vh - margin) y = e.clientY - th - margin;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  }
+
+  function hideTip() { tip.classList.remove('visible'); }
+
+  function openDetails(td) {
+    const label   = td.dataset.label;
+    const adtype  = td.dataset.adtype;
+    const catName = td.closest('tr')?.querySelector('.cat-name')?.textContent?.trim() || '—';
+    console.log(`[View Details] ${adtype} › ${label} › ${catName}`);
+    hideTip();
+    // TODO: navigate to details page
+  }
+
+  let currentTd = null, hideTimer = null;
+  const cancelHide  = () => { if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; } };
+  const scheduleHide = () => { hideTimer = setTimeout(hideTip, 80); };
+
+  tip.addEventListener('mouseenter', cancelHide);
+  tip.addEventListener('mouseleave', scheduleHide);
+  tip.addEventListener('click', e => {
+    if (e.target.closest('#tt-view-btn') && currentTd) openDetails(currentTd);
+  });
+
+  const container = document.getElementById('brandContainer');
+  container.addEventListener('mouseover', e => {
+    const td = e.target.closest('.td-m[data-val]');
+    if (td) { cancelHide(); currentTd = td; showTip(td, e); }
+  });
+  container.addEventListener('mousemove', e => {
+    if (tip.classList.contains('visible')) positionTip(e);
+  });
+  container.addEventListener('mouseout', e => {
+    if (e.target.closest('.td-m[data-val]')) scheduleHide();
+  });
+  container.addEventListener('click', e => {
+    const td = e.target.closest('.td-m[data-val]');
+    if (td) openDetails(td);
+  });
+})();
+</script>
+
+<!-- ══════════════ DETAIL SIDE PANEL ══════════════ -->
+<div id="detail-backdrop"></div>
+<div id="detail-panel">
+
+  <!-- §1 Header bar -->
+  <div id="dp-header">
+    <span id="dp-title">Details</span>
+    <div style="flex:1"></div>
+    <!-- Period selectors -->
+    <div class="dp-filter-select">
+      <span class="dp-filter-value" id="dp-period-type">Monthly</span>
+      <span class="dp-filter-chevron"><svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+    </div>
+    <div class="dp-filter-select" style="gap:4px">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:#B2B2B8"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 1v4M11 1v4M2 7h12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span class="dp-filter-value" id="dp-period-range">03-2026</span>
+    </div>
+    <button id="dp-close" aria-label="Close panel">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <!-- §2 Filter bar -->
+  <div id="dp-filter">
+    <!-- Profile -->
+    <div class="dp-filter-select">
+      <span class="dp-filter-label">Profile</span>
+      <span class="dp-filter-value" id="dp-f-profile">Henkel – Home Care</span>
+      <span class="dp-filter-chevron"><svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+    </div>
+    <!-- Brand -->
+    <div class="dp-filter-select">
+      <span class="dp-filter-label">Brand</span>
+      <span class="dp-filter-value" id="dp-f-brand">—</span>
+      <span class="dp-filter-chevron"><svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+    </div>
+    <!-- Category Layer -->
+    <div class="dp-filter-select">
+      <span class="dp-filter-label">Category Layer</span>
+      <span class="dp-filter-value" id="dp-f-layer">L2</span>
+      <span class="dp-filter-chevron"><svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+    </div>
+    <!-- Benchmark -->
+    <div class="dp-filter-select">
+      <span class="dp-filter-label">Benchmark</span>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="color:#B2B2B8"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5.2" r=".65" fill="currentColor"/></svg>
+      <span class="dp-filter-value">P50</span>
+      <span class="dp-filter-chevron"><svg viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+    </div>
+    <div class="dp-filter-sep"></div>
+    <!-- SP/SB/SD -->
+    <div class="dp-seg" id="dp-adtype-seg">
+      <button class="dp-seg-btn active" data-at="sp">SP</button>
+      <button class="dp-seg-btn" data-at="sb">SB</button>
+      <button class="dp-seg-btn" data-at="sd">SD</button>
+    </div>
+  </div>
+
+  <!-- Scrollable body -->
+  <div id="dp-body">
+
+    <!-- §3 Brand info + grouped metrics (merged) -->
+    <div id="dp-brand-section">
+      <!-- Brand info header -->
+      <div class="dp-brand-info-hdr">
+        <div>
+          <div id="dp-brand-name">—</div>
+          <div id="dp-brand-cat">—</div>
+        </div>
+        <div id="dp-brand-meta">
+          <span class="dp-meta-item">Country: <b id="dp-country">US</b></span>
+          <span class="dp-meta-item">Peer Set Size: <b id="dp-peer">15–20</b></span>
+          <span class="dp-meta-item">Level: <b id="dp-level">—</b></span>
+        </div>
+      </div>
+      <!-- Metric groups injected by JS -->
+      <div class="dp-metric-groups" id="dp-metric-groups"></div>
+    </div>
+
+    <!-- §4 Trend Performance -->
+    <div class="dp-section-flat" id="dp-trend-section">
+      <!-- Left: controls + chart + legend -->
+      <div class="dp-trend-left">
+        <div class="dp-trend-hdr">
+          <span class="dp-trend-title">Trend Performance</span>
+          <div class="dp-trend-ctrls">
+            <!-- Metrics dropdown -->
+            <div class="dp-trend-metric-dd" id="dp-trend-metric-dd">
+              <span class="dp-trend-metric-dd-label">Metrics</span>
+              <span class="dp-trend-metric-dd-sep"></span>
+              <span class="dp-trend-metric-dd-val" id="dp-trend-metric-val">CTR</span>
+              <span class="dp-trend-metric-dd-arrow">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="dp-trend-metric-menu" id="dp-trend-metric-toggle"></div>
+            </div>
+            <!-- Date selector -->
+            <div class="dp-trend-date-btn">
+              <span>02/2025 ~ 01/2026</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="#B2B2B8" stroke-width="1.3"/><path d="M5 1v4M11 1v4M2 7h12" stroke="#B2B2B8" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <!-- SVG chart (injected by JS) -->
+        <div class="dp-chart-wrap" id="dp-chart-svg-wrap"></div>
+        <!-- Legend (injected by JS) -->
+        <div class="dp-trend-legend" id="dp-chart-legend"></div>
+      </div>
+      <!-- Right: Insights card -->
+      <div class="dp-insights-panel">
+        <div class="dp-insights-hdr">
+          <svg width="12" height="16" viewBox="0 0 12 16" fill="none"><path d="M6 1C3.239 1 1 3.239 1 6c0 1.8 1.008 3.376 2.5 4.226V12h5v-1.774C10 9.376 11 7.8 11 6c0-2.761-2.239-5-5-5z" stroke="#0253B6" stroke-width="1.3" stroke-linejoin="round"/><path d="M3.5 12h5M4.5 14h3" stroke="#0253B6" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span class="dp-insights-title">Insights</span>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="margin-left:auto;color:#0253B6"><circle cx="9" cy="9" r="7.5" stroke="currentColor" stroke-width="1.2"/><path d="M9 8v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="9" cy="6.3" r=".7" fill="currentColor"/></svg>
+        </div>
+        <div class="dp-insights-body" id="dp-insights-body">
+          <div class="dp-insight-chip">Select a metric to view insights</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §5 Brand Distribution -->
+    <div class="dp-section-flat" id="dp-dist-section">
+      <div class="dp-section-flat-hdr">
+        <span class="dp-section-flat-title">Brand Distribution</span>
+        <div class="dp-dist-dd" id="dp-dist-dd">
+          <span class="dp-dist-dd-label">Metrics</span>
+          <span class="dp-trend-metric-dd-sep"></span>
+          <span class="dp-dist-dd-val" id="dp-dist-dd-val">All Selected</span>
+          <span class="dp-trend-metric-dd-arrow">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+      <!-- Matrix injected by JS -->
+      <div id="dp-dist-matrix"></div>
+    </div>
+
+    <!-- §6 Detailed Metrics Table -->
+    <div class="dp-section-flat">
+      <div class="dp-section-flat-hdr">
+        <span class="dp-section-flat-title" id="dp-dtable-title">Efficiency — SP Metrics</span>
+      </div>
+      <div class="dp-dtable-wrap" style="padding:0 0 8px">
+        <table class="dp-dtable">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>My Value</th>
+              <th>Tier</th>
+              <th>P25</th>
+              <th>P50</th>
+              <th>P75</th>
+              <th>vs P25</th>
+              <th>vs P50</th>
+              <th>vs P75</th>
+              <th>vs Last</th>
+            </tr>
+          </thead>
+          <tbody id="dp-dtable-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end #dp-body -->
+</div><!-- end #detail-panel -->
+<!-- ══════════════ END DETAIL SIDE PANEL ══════════════ -->
+
+<script>
+// ══════════════════════════════════════════════════════
+//  ONBOARDING TOUR  (3 steps)
+//  localStorage key: pcv_benchmark_tour_v3_done
+// ══════════════════════════════════════════════════════
+(function initTour() {
+  const STORAGE_KEY = 'pcv_benchmark_tour_v3_done';
+
+  // ── DOM refs ──────────────────────────────────────
+  const modalOverlay = document.getElementById('tour-modal-overlay');
+  const modalClose   = document.getElementById('tour-modal-close');
+  const modalSkip    = document.getElementById('tour-modal-skip');
+  const modalStart   = document.getElementById('tour-modal-start');
+  const spotlight    = document.getElementById('tour-spotlight');
+  const tooltip      = document.getElementById('tour-tooltip');
+
+  // ── Helpers ───────────────────────────────────────
+  function hide(el) { el.style.display = 'none'; }
+  function show(el, display) { el.style.display = display || 'block'; }
+
+  function completeTour() {
+    localStorage.setItem(STORAGE_KEY, '1');
+    hide(modalOverlay);
+    hide(spotlight);
+    hide(tooltip);
+    document.removeEventListener('keydown', onEsc);
+  }
+
+  function onEsc(e) { if (e.key === 'Escape') completeTour(); }
+  document.addEventListener('keydown', onEsc);
+
+  // ── Step definitions ──────────────────────────────
+  const STEPS = [
+    {
+      // Step 2 — P25/P50/P75 percentile intro
+      getTarget: () => document.querySelector('.td-m[data-val]'),
+      arrowClass: 'arrow-left',
+      position: 'right',
+      html: () => `
+        <div class="tour-tt-content">
+          <div class="tour-tt-step">Step 1 of 2</div>
+          <div class="tour-tt-title">Understanding Percentile Benchmarks</div>
+          <div class="tour-tt-body">P25 / P50 / P75 are percentile values based on all advertisers in your category, ranked from low to high:</div>
+          <div class="tour-tt-table">
+            <div class="tour-tt-row"><span class="tour-tt-row-key">P25</span><span class="tour-tt-row-val">25% of advertisers fall below this value</span></div>
+            <div class="tour-tt-row"><span class="tour-tt-row-key">P50</span><span class="tour-tt-row-val">50% of advertisers fall below this value</span></div>
+            <div class="tour-tt-row"><span class="tour-tt-row-key">P75</span><span class="tour-tt-row-val">75% of advertisers fall below this value</span></div>
+          </div>
+          <div class="tour-tt-tip">
+            <span class="tour-tt-tip-icon">💡</span>
+            <span><b>Higher isn't always better</b> — it depends on the metric:<br>
+            CTR: higher is better → above P75 is great<br>
+            CPC: lower is better → below P25 is great</span>
+          </div>
+        </div>
+        <div class="tour-tt-footer">
+          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <div class="tour-tt-actions">
+            <button class="tour-btn-tt-primary" id="tt-next">Next →</button>
+          </div>
+        </div>`
+    },
+    {
+      // Step 3 — Category Layer intro
+      getTarget: () => {
+        // highlight the depth-buttons row (L1/L2/L3/L4 container)
+        return document.querySelector('.cat-depth-row') ||
+               document.querySelector('.cat-depth-btn');
+      },
+      arrowClass: 'arrow-top',
+      position: 'below',
+      html: () => `
+        <div class="tour-tt-content">
+          <div class="tour-tt-step">Step 2 of 2</div>
+          <div class="tour-tt-title">Category Depth Levels</div>
+          <div class="tour-tt-body">Amazon organizes products into 4 category levels. The deeper the level, the closer the peer comparison.</div>
+          <div class="tour-tt-table">
+            <div class="tour-tt-row"><span class="tour-tt-row-key">L1</span><span class="tour-tt-row-val">Broadest <span style="opacity:.55">(e.g. Electronics)</span></span></div>
+            <div class="tour-tt-row"><span class="tour-tt-row-key">L2</span><span class="tour-tt-row-val">Recommended starting point <span style="opacity:.55">(default)</span></span></div>
+            <div class="tour-tt-row"><span class="tour-tt-row-key">L3</span><span class="tour-tt-row-val">More specific segment</span></div>
+            <div class="tour-tt-row"><span class="tour-tt-row-key">L4</span><span class="tour-tt-row-val">Most precise peer comparison</span></div>
+          </div>
+          <a class="tour-tt-link" href="https://advertising.amazon.com/help/GJDEWV64DRRG4J6H" target="_blank" rel="noopener">
+            Learn about Amazon's category structure
+            <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 10L10 2M10 2H5M10 2v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <div class="tour-tt-footer">
+          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <div class="tour-tt-actions">
+            <button class="tour-btn-tt-ghost" id="tt-back">← Back</button>
+            <button class="tour-btn-tt-primary" id="tt-done">Done ✓</button>
+          </div>
+        </div>`
+    }
+  ];
+
+  let currentStep = 0; // 0-indexed into STEPS
+
+  // ── Spotlight + Tooltip positioning ──────────────────
+  const GAP = 8; // px between spotlight border and tooltip
+
+  function positionSpotlight(target) {
+    const r = target.getBoundingClientRect();
+    const pad = 6;
+    spotlight.style.top    = (r.top    - pad) + 'px';
+    spotlight.style.left   = (r.left   - pad) + 'px';
+    spotlight.style.width  = (r.width  + pad * 2) + 'px';
+    spotlight.style.height = (r.height + pad * 2) + 'px';
+  }
+
+  function positionTooltip(target, position, arrowClass) {
+    tooltip.className = arrowClass + ' theme-light'; // theme-light = white; swap to theme-dark for dark version
+    show(tooltip);
+    const r   = target.getBoundingClientRect();
+    const tw  = tooltip.offsetWidth;
+    const th  = tooltip.offsetHeight;
+    const vw  = window.innerWidth;
+    const vh  = window.innerHeight;
+    let top, left;
+
+    if (position === 'right') {
+      left = r.right + GAP + 6;
+      top  = r.top;
+      // if it goes off-screen right → flip to left
+      if (left + tw > vw - 12) { left = r.left - tw - GAP - 6; tooltip.className = 'arrow-left'; }
+    } else {
+      // below
+      top  = r.bottom + GAP + 6;
+      left = r.left;
+      // if it goes off-screen bottom → flip above
+      if (top + th > vh - 12) { top = r.top - th - GAP - 6; tooltip.className = 'arrow-bottom'; }
+    }
+    // clamp horizontally
+    left = Math.max(12, Math.min(left, vw - tw - 12));
+    top  = Math.max(12, Math.min(top,  vh - th - 12));
+
+    tooltip.style.top  = top  + 'px';
+    tooltip.style.left = left + 'px';
+  }
+
+  // ── Show a spotlight step ──────────────────────────
+  function showStep(idx) {
+    currentStep = idx;
+    const step   = STEPS[idx];
+    const target = step.getTarget();
+    if (!target) { completeTour(); return; }
+
+    tooltip.innerHTML = step.html();
+    show(spotlight);
+    positionSpotlight(target);
+    positionTooltip(target, step.position, step.arrowClass);
+
+    // wire buttons
+    const btnSkip = document.getElementById('tt-skip');
+    const btnNext = document.getElementById('tt-next');
+    const btnBack = document.getElementById('tt-back');
+    const btnDone = document.getElementById('tt-done');
+
+    if (btnSkip) btnSkip.addEventListener('click', completeTour);
+    if (btnNext) btnNext.addEventListener('click', () => showStep(1));
+    if (btnBack) btnBack.addEventListener('click', () => showStep(0));
+    if (btnDone) btnDone.addEventListener('click', completeTour);
+  }
+
+  // ── Update spotlight on scroll / resize ───────────
+  function refreshSpotlight() {
+    if (spotlight.style.display === 'none') return;
+    const target = STEPS[currentStep].getTarget();
+    if (target) positionSpotlight(target);
+  }
+  window.addEventListener('scroll', refreshSpotlight, { passive: true });
+  window.addEventListener('resize', refreshSpotlight);
+
+  // ── Boot ─────────────────────────────────────────
+  // DEV MODE: always show tour on refresh (comment out to re-enable localStorage gate)
+  // if (localStorage.getItem(STORAGE_KEY)) {
+  //   hide(modalOverlay);
+  //   return;
+  // }
+
+  // Show welcome modal
+  show(modalOverlay, 'flex');
+
+  modalClose.addEventListener('click', completeTour);
+  modalSkip.addEventListener('click',  completeTour);
+  modalStart.addEventListener('click', () => {
+    hide(modalOverlay);
+    // Wait for renderAll() to finish painting first data cell
+    requestAnimationFrame(() => requestAnimationFrame(() => showStep(0)));
+  });
+
+})();
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DETAIL SIDE PANEL  (comprehensive)
+// ══════════════════════════════════════════════════════
+(function initDetailPanel() {
+  const backdrop   = document.getElementById('detail-backdrop');
+  const panel      = document.getElementById('detail-panel');
+  const btnClose   = document.getElementById('dp-close');
+  const elFBrand   = document.getElementById('dp-f-brand');
+  const elFLayer   = document.getElementById('dp-f-layer');
+  const metricGroups = document.getElementById('dp-metric-groups');
+  const adtypeSeg  = document.getElementById('dp-adtype-seg');
+  const trendToggle    = document.getElementById('dp-trend-metric-toggle');
+  const trendMetricDd  = document.getElementById('dp-trend-metric-dd');
+  const trendMetricVal = document.getElementById('dp-trend-metric-val');
+  const insightsBody   = document.getElementById('dp-insights-body');
+  const chartLegend    = document.getElementById('dp-chart-legend');
+  const dtableBody     = document.getElementById('dp-dtable-body');
+  const dtableTitle    = document.getElementById('dp-dtable-title');
+
+  // ── Metric groups by adtype ────────────────────
+  const METRIC_GROUPS_DEF = {
+    sp: [
+      { name:'Efficiency',    color:'purple', keys:['ctr','cpc'] }
+    ],
+    sb: [
+      { name:'Efficiency',    color:'purple', keys:['ctr','cpc','cpm'] },
+      { name:'New to Brand',  color:'blue',   keys:['pct_purchases','purchase_rate','cost_per_purchase'] }
+    ],
+    sd: [
+      { name:'Efficiency',    color:'purple', keys:['ctr','cpc','cpm'] },
+      { name:'New to Brand',  color:'blue',   keys:['pct_purchases','purchase_rate','cost_per_purchase'] },
+      { name:'Video Ad',      color:'green',  keys:['completion_rate','cost_per_completed_view'] }
+    ]
+  };
+
+  let activeAdtype = 'sp';
+  let activeTrendMetric = 'ctr';
+  let currentRowData = null;
+
+  // ── Arrow SVG ──────────────────────────────────
+  const AP = `M2.69874 7.48511C2.97488 7.48511 3.19874 7.26125 3.19874 6.98511L3.19874 4.19539L4.1189 4.19539C4.50192 4.19539 4.74271 3.78237 4.55401 3.44906L2.74498 0.253665C2.5535 -0.0845587 2.06624 -0.0845582 1.87476 0.253666L0.0657266 3.44906C-0.122976 3.78237 0.117812 4.19539 0.500836 4.19539L1.42096 4.19539L1.42096 6.98511C1.42096 7.26125 1.64482 7.48511 1.92096 7.48511L2.69874 7.48511Z`;
+  function dpArrow(up, color) {
+    const inner = up
+      ? `<g transform="rotate(180,2.5,4)"><path fill-rule="evenodd" clip-rule="evenodd" d="${AP}" fill="${color||'currentColor'}"/></g>`
+      : `<path fill-rule="evenodd" clip-rule="evenodd" d="${AP}" fill="${color||'currentColor'}"/>`;
+    return `<svg width="5" height="8" viewBox="0 0 5 8" fill="none">${inner}</svg>`;
+  }
+
+  const INFO_SVG = `<svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5.2" r=".65" fill="currentColor"/></svg>`;
+
+  const TIER_COLORS = {
+    t1: { bg:'rgba(40,199,111,0.12)', text:'#1a9e55', band:'rgba(40,199,111,0.10)' },
+    t2: { bg:'rgba(2,83,182,0.08)',   text:'#1a5db0', band:'rgba(2,83,182,0.06)'   },
+    t3: { bg:'rgba(255,159,67,0.12)', text:'#c07400', band:'rgba(255,159,67,0.10)' },
+    t4: { bg:'rgba(234,84,85,0.10)',  text:'#c9342e', band:'rgba(234,84,85,0.08)'  }
+  };
+  const TIER_NAMES = { t1:'P0–P25', t2:'P25–P50', t3:'P50–P75', t4:'P75–P100' };
+
+  // ── Mock trend data (6 months) ──────────────────
+  function genTrend(val, p50) {
+    const p25 = p50 * 0.75, p75 = p50 * 1.25;
+    const jitter = (base, amp) => Array.from({length:6}, (_,i) =>
+      +(base + Math.sin(i * 0.9 + Math.random() * 0.5) * amp).toFixed(4)
+    );
+    return {
+      labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+      brand: jitter(val, val * 0.08),
+      p25:   jitter(p25, p25 * 0.03),
+      p50:   jitter(p50, p50 * 0.03),
+      p75:   jitter(p75, p75 * 0.03),
+    };
+  }
+
+  // ── Mock peer data ──────────────────────────────
+  const MOCK_PEERS = [
+    { name:'Procter & Gamble', ctr:1.48, cpc:0.42 },
+    { name:'Henkel',           ctr:1.35, cpc:0.48 },
+    { name:'Unilever',         ctr:1.22, cpc:0.51 },
+    { name:'Colgate-Palmolive',ctr:1.12, cpc:0.55 },
+    { name:'Reckitt',          ctr:0.98, cpc:0.61 },
+    { name:'SC Johnson',       ctr:0.88, cpc:0.66 },
+    { name:'Seventh Gen.',     ctr:0.72, cpc:0.74 },
+  ];
+
+  // ── Collect all metric data from a row's cells ─
+  function collectRowMetrics(tr) {
+    const metrics = { sp:{}, sb:{}, sd:{} };
+    tr.querySelectorAll('.td-m[data-val]').forEach(td => {
+      const at  = (td.dataset.adtype||'').toLowerCase();
+      const lbl = td.dataset.label;
+      const val = parseFloat(td.dataset.val);
+      const p50 = parseFloat(td.dataset.p50);
+      if (at && lbl && !isNaN(val)) {
+        const defs = METRICS[at] || [];
+        const def  = defs.find(d => d.label === lbl);
+        if (def) metrics[at][def.key] = { val, p50 };
+      }
+    });
+    return metrics;
+  }
+
+  // ── §3b: Efficiency blocks ──────────────────────
+  function buildMetricBlock(def, adtype) {
+    const m = (currentRowData.metrics[adtype]||{})[def.key];
+    if (!m) return '';
+    const { val, p50 } = m;
+    const p25 = p50*0.75, p75 = p50*1.25;
+    const tier = getTier(val, p50);
+    const tl = TIER_NAMES[tier]||'';
+
+    function deltaCol(lbl, bench) {
+      const pct = (val-bench)/Math.abs(bench)*100;
+      const isUp = pct>=0;
+      const isGood = def.good==='high' ? isUp : !isUp;
+      const cls = Math.abs(pct)<0.5?'neu':isGood?'pos':'neg';
+      const sign = pct>=0?'+':'';
+      return `<div class="dp-bm-col">
+        <div class="dp-bm-top"><span class="dp-bm-lbl">${lbl}</span><span class="dp-bm-val">${def.fmt(bench)}</span></div>
+        <div class="dp-bm-bot"><span class="dp-bm-delta ${cls}">${sign}${pct.toFixed(1)}% ${dpArrow(isUp)}</span></div>
+      </div>`;
+    }
+
+    // vs Last (simulated as val × random 0.88~1.12)
+    const lastVal = val * (0.88 + Math.random()*0.24);
+    const lastPct = (val-lastVal)/Math.abs(lastVal)*100;
+    const lastUp  = lastPct>=0;
+    const lastGood= def.good==='high'? lastUp : !lastUp;
+    const lastCls = Math.abs(lastPct)<0.5?'neu':lastGood?'pos':'neg';
+
+    return `<div class="dp-metric-block">
+      <div class="dp-metric-label-row">
+        <span class="dp-metric-label">${def.label}</span>
+        <span class="dp-metric-info" style="color:#B2B2B8">${INFO_SVG}</span>
+      </div>
+      <div class="dp-metric-value-row">
+        <span class="dp-metric-value">${def.fmt(val)}</span>
+        <span class="dp-tier-badge tier-${tier}">${tl}</span>
+      </div>
+      <div class="dp-bm-cols">
+        ${deltaCol('P25', p25)}
+        ${deltaCol('P50', p50)}
+        ${deltaCol('P75', p75)}
+        <div class="dp-bm-col">
+          <div class="dp-bm-top"><span class="dp-bm-lbl">Last</span><span class="dp-bm-val">${def.fmt(lastVal)}</span></div>
+          <div class="dp-bm-bot"><span class="dp-bm-delta ${lastCls}">${lastPct>=0?'+':''}${lastPct.toFixed(1)}% ${dpArrow(lastUp)}</span></div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const INFO_SVG_SM = `<svg viewBox="0 0 16 16" fill="none" style="width:16px;height:16px;color:#B2B2B8"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5.2" r=".65" fill="currentColor"/></svg>`;
+  const CHEVRON_SM = `<svg viewBox="0 0 16 16" fill="none" style="width:16px;height:16px"><path d="M5 6l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  function renderBrandSection() {
+    if (!currentRowData) return;
+    const brandSection = document.getElementById('dp-brand-section');
+    const groups = METRIC_GROUPS_DEF[activeAdtype] || [];
+    const allDefs = METRICS[activeAdtype] || [];
+    const isSP = activeAdtype === 'sp';
+
+    if (isSP) {
+      // ── SP layout: Figma 1053:46032 ────────────────
+      brandSection.classList.add('sp-mode');
+
+      // Update brand-info header to SP style
+      const catParts = (currentRowData.catName || '').split(' → ');
+      const breadcrumbHtml = catParts.map((p, i) => {
+        if (i < catParts.length - 1)
+          return `<span class="dp-bc-link">${p}</span><span class="dp-bc-sep">/</span>`;
+        return `<span class="dp-bc-link">${p}</span>`;
+      }).join('') +
+        `<span class="dp-bc-sep">/</span><span class="dp-bc-dim">--${CHEVRON_SM}</span>` +
+        `<span class="dp-bc-sep">/</span><span class="dp-bc-dim">--${CHEVRON_SM}</span>`;
+
+      // Replace brand-hdr inner with SP structure
+      const hdr = document.querySelector('.dp-brand-info-hdr');
+      hdr.innerHTML = `
+        <div class="dp-brand-top-row">
+          <div id="dp-brand-name" style="font-size:20px;font-weight:500;color:#5e5873;line-height:28px">${currentRowData.brand}</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div class="dp-brand-breadcrumb">${breadcrumbHtml}</div>
+          <div class="dp-brand-meta-sp">
+            <span class="dp-meta-lbl">Country:</span><span class="dp-meta-val">US</span>
+            <span class="dp-meta-vsep"></span>
+            <span class="dp-meta-lbl">Peer Set Size:</span><span class="dp-meta-val">15–20</span>
+            <span class="dp-meta-info-icon">${INFO_SVG_SM}</span>
+          </div>
+        </div>`;
+
+      // Render nested efficiency card
+      const spGroup = groups[0]; // Efficiency
+      const blocks = (spGroup?.keys || []).map(key => {
+        const def = allDefs.find(d => d.key === key);
+        return def ? buildMetricBlock(def, activeAdtype) : '';
+      }).filter(Boolean).join('');
+
+      metricGroups.innerHTML = `<div class="dp-sp-eff-card">
+        <div class="dp-sp-eff-hdr">Efficiency</div>
+        <div class="dp-sp-eff-body">${blocks}</div>
+      </div>`;
+
+    } else {
+      // ── SB / SD layout: grouped horizontal scroll rows ──
+      brandSection.classList.remove('sp-mode');
+
+      // Restore default brand header
+      const hdr = document.querySelector('.dp-brand-info-hdr');
+      hdr.innerHTML = `
+        <div>
+          <div id="dp-brand-name">${currentRowData.brand}</div>
+          <div id="dp-brand-cat">${currentRowData.catName}</div>
+        </div>
+        <div id="dp-brand-meta">
+          <span class="dp-meta-item">Country: <b id="dp-country">US</b></span>
+          <span class="dp-meta-item">Peer Set Size: <b id="dp-peer">15–20</b></span>
+          <span class="dp-meta-item">Level: <b id="dp-level">${
+            ({'1':'L1 – Broad','2':'L2 – Recommended','3':'L3 – Specific','4':'L4 – Precise'})[currentRowData.level]||`L${currentRowData.level}`
+          }</b></span>
+        </div>`;
+
+      metricGroups.innerHTML = groups.map(g => {
+        const blocks = g.keys.map(key => {
+          const def = allDefs.find(d => d.key === key);
+          return def ? buildMetricBlock(def, activeAdtype) : '';
+        }).filter(Boolean).join('');
+        return `<div class="dp-metric-group">
+          <div class="dp-metric-group-hdr dp-mg-${g.color}">${g.name}</div>
+          <div class="dp-metric-row">${blocks}</div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // ── §4: SVG Trend Chart (Figma 1048:41731) ──────
+  function renderTrendChart(metricKey) {
+    const m   = (currentRowData.metrics[activeAdtype]||{})[metricKey];
+    const def = (METRICS[activeAdtype]||[]).find(d=>d.key===metricKey);
+    const wrap = document.getElementById('dp-chart-svg-wrap');
+    if (!m || !def) {
+      wrap.innerHTML = '<div style="padding:20px;color:#B2B2B8;font-size:13px">No data</div>';
+      return;
+    }
+
+    const td = genTrend(m.val, m.p50);
+    const N  = td.labels.length;
+    const W=900, H=320, PL=52, PR=16, PT=16, PB=38;
+    const cW=W-PL-PR, cH=H-PT-PB;
+
+    const allVals = [...td.brand,...td.p25,...td.p50,...td.p75];
+    const rawMin  = Math.min(...allVals), rawMax = Math.max(...allVals);
+    const pad = (rawMax - rawMin) * 0.18;
+    const vmin = rawMin - pad, vmax = rawMax + pad;
+
+    const xOf = i => PL + (i/(N-1))*cW;
+    const yOf = v => PT + (1-(v-vmin)/(vmax-vmin))*cH;
+    const line = arr => arr.map((v,i)=>`${i===0?'M':'L'}${xOf(i).toFixed(1)},${yOf(v).toFixed(1)}`).join(' ');
+    function band(upper, lower) {
+      const fwd = upper.map((v,i)=>`${i===0?'M':'L'}${xOf(i).toFixed(1)},${yOf(v).toFixed(1)}`).join(' ');
+      const rev = [...lower].map((v,i)=>`L${xOf(lower.length-1-i).toFixed(1)},${yOf(v).toFixed(1)}`).reverse().join(' ');
+      return `${fwd} ${rev} Z`;
+    }
+
+    const ticks  = 5;
+    const yTicks = Array.from({length:ticks+1},(_,i)=>vmin+(vmax-vmin)*i/ticks).reverse();
+    const uid = `trc${Date.now()}`;
+
+    const svgStr = `<svg id="${uid}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"
+      style="display:block;width:100%;height:100%;overflow:visible">
+      <defs><clipPath id="${uid}cp"><rect x="${PL}" y="${PT}" width="${cW}" height="${cH}"/></clipPath></defs>
+      <!-- grid -->
+      ${yTicks.map(v=>`<line x1="${PL}" y1="${yOf(v).toFixed(1)}" x2="${W-PR}" y2="${yOf(v).toFixed(1)}" stroke="#F0F1F3" stroke-width="1"/>`).join('')}
+      <!-- y-axis labels -->
+      ${yTicks.map(v=>`<text x="${PL-6}" y="${(yOf(v)+4).toFixed(1)}" text-anchor="end" font-size="11" fill="#B2B2B8" font-family="Montserrat,Inter,sans-serif">${def.fmt(v)}</text>`).join('')}
+      <!-- x-axis labels -->
+      ${td.labels.map((l,i)=>`<text x="${xOf(i).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="11" fill="#B2B2B8" font-family="Montserrat,Inter,sans-serif">${l}</text>`).join('')}
+      <g clip-path="url(#${uid}cp)">
+        <!-- P25-P50 blue band -->
+        <path d="${band(td.p50,td.p25)}" fill="rgba(27,93,176,0.15)"/>
+        <!-- P50-P75 orange band -->
+        <path d="${band(td.p75,td.p50)}" fill="rgba(255,159,67,0.15)"/>
+        <!-- user purple line -->
+        <path d="${line(td.brand)}" stroke="#7367F0" stroke-width="2.2" fill="none" stroke-linejoin="round"/>
+        <!-- dots (painted below hover overlay so hover dots sit on top) -->
+        ${td.brand.map((v,i)=>`<circle cx="${xOf(i).toFixed(1)}" cy="${yOf(v).toFixed(1)}" r="3.5" fill="#7367F0" stroke="#fff" stroke-width="1.8"/>`).join('')}
+      </g>
+      <!-- crosshair line (hidden) -->
+      <line id="${uid}xl" x1="0" y1="${PT}" x2="0" y2="${PT+cH}"
+        stroke="#DEDFE3" stroke-width="1" stroke-dasharray="4,3" display="none"/>
+      <!-- hover dot (hidden) -->
+      <circle id="${uid}hd" r="5.5" fill="#7367F0" stroke="#fff" stroke-width="2" display="none"/>
+      <!-- hit area -->
+      <rect id="${uid}hit" x="${PL}" y="${PT}" width="${cW}" height="${cH}" fill="transparent" style="cursor:crosshair"/>
+    </svg>`;
+
+    wrap.innerHTML = `<div style="position:relative;width:100%;height:100%">
+      ${svgStr}
+      <div class="dp-chart-tt" id="${uid}tt" style="display:none"></div>
+    </div>`;
+
+    // ── hover interactions ───────────────
+    const svgEl  = document.getElementById(uid);
+    const hitEl  = document.getElementById(`${uid}hit`);
+    const xlEl   = document.getElementById(`${uid}xl`);
+    const hdEl   = document.getElementById(`${uid}hd`);
+    const ttEl   = document.getElementById(`${uid}tt`);
+
+    hitEl.addEventListener('mousemove', e => {
+      const r   = svgEl.getBoundingClientRect();
+      const mx  = (e.clientX - r.left) / r.width * W;
+      const idx = Math.max(0, Math.min(N-1, Math.round((mx-PL)/cW*(N-1))));
+      const x   = xOf(idx);
+      const bY  = yOf(td.brand[idx]);
+
+      xlEl.setAttribute('x1', x); xlEl.setAttribute('x2', x); xlEl.removeAttribute('display');
+      hdEl.setAttribute('cx', x); hdEl.setAttribute('cy', bY); hdEl.removeAttribute('display');
+
+      ttEl.innerHTML = `
+        <div class="dp-chart-tt-date">${td.labels[idx]}</div>
+        <div class="dp-chart-tt-row"><span class="dp-chart-tt-lbl">${def.label}</span><span class="dp-chart-tt-val user">${def.fmt(td.brand[idx])}</span></div>
+        <div class="dp-chart-tt-row"><span class="dp-chart-tt-lbl">P25</span><span class="dp-chart-tt-val">${def.fmt(td.p25[idx])}</span></div>
+        <div class="dp-chart-tt-row"><span class="dp-chart-tt-lbl">P50</span><span class="dp-chart-tt-val">${def.fmt(td.p50[idx])}</span></div>
+        <div class="dp-chart-tt-row"><span class="dp-chart-tt-lbl">P75</span><span class="dp-chart-tt-val">${def.fmt(td.p75[idx])}</span></div>`;
+
+      const pxX  = (x/W) * r.width;
+      const pxY  = (bY/H) * r.height;
+      let left   = pxX + 14;
+      if (left + 180 > r.width) left = pxX - 190;
+      ttEl.style.cssText = `display:block;left:${left}px;top:${Math.max(0,pxY-20)}px`;
+    });
+    hitEl.addEventListener('mouseleave', () => {
+      xlEl.setAttribute('display','none');
+      hdEl.setAttribute('display','none');
+      ttEl.style.display = 'none';
+    });
+
+    // ── legend ──────────────────────────
+    chartLegend.innerHTML = `
+      <div class="dp-trend-legend-item"><span class="dp-legend-user-line"></span><span>${def.label}</span></div>
+      <div class="dp-trend-legend-item"><span class="dp-legend-band-blue"></span><span>${def.label} P25–P50</span></div>
+      <div class="dp-trend-legend-item"><span class="dp-legend-band-orange"></span><span>${def.label} P50–P75</span></div>`;
+
+    // ── insights ────────────────────────
+    const pct    = ((m.val - m.p50) / Math.abs(m.p50) * 100).toFixed(0);
+    const above  = m.val > m.p50;
+    const isGood = (def.good === 'high') === above;
+    insightsBody.innerHTML = `
+      <div class="dp-insight-chip">${def.label} is ${Math.abs(pct)}% ${above?'above':'below'} ${def.label} P50</div>
+      <p class="dp-insight-desc">${isGood
+        ? `Your ${def.label} is performing well relative to category peers. Keep optimizing to maintain this position.`
+        : `Review ${def.label.toLowerCase()} efficiency. Consider adjusting bidding strategies and improving quality score to better align with benchmark.`
+      }</p>`;
+  }
+
+  // ── §5: Brand Distribution Matrix (Figma 1048:41824) ──
+  const DIST_PEERS = [
+    'Procter & Gamble','Henkel','Unilever','Colgate',
+    'Reckitt','SC Johnson','Seventh Gen.','Clorox','Method'
+  ];
+  const BD_MAX_COLS    = 3;  // max metric columns shown
+  const BD_MAX_VISIBLE = 6;  // max brand tags before "+N" (≈2 rows of 3)
+
+  function pctBucket(val, p25, p50, p75) {
+    if (val < p25) return 't1';
+    if (val < p50) return 't2';
+    if (val < p75) return 't3';
+    return 't4';
+  }
+
+  // Build the tag HTML for a cell
+  function bdCellHtml(brands, collapsed = true) {
+    if (brands.length === 0) return `<span class="bd-empty-cell">-</span>`;
+
+    const isCollapsed = collapsed && brands.length > BD_MAX_VISIBLE;
+    const shown = isCollapsed ? brands.slice(0, BD_MAX_VISIBLE) : brands;
+    const extra = brands.length - BD_MAX_VISIBLE;
+
+    const safe = JSON.stringify(brands).replace(/'/g,"&#39;");
+    const tags = shown.map(b =>
+      `<span class="bd-tag ${b.isMe?'me':'peer'}">${b.name}</span>`
+    ).join('');
+
+    const toggle = isCollapsed
+      ? `<span class="bd-tag-more" data-brands='${safe}'>+${extra} more</span>`
+      : (brands.length > BD_MAX_VISIBLE
+          ? `<span class="bd-tag-less" data-brands='${safe}'>Show less</span>` : '');
+
+    return `<div class="bd-tags">${tags}${toggle}</div>`;
+  }
+
+  function renderBrandDist() {
+    const matrixEl = document.getElementById('dp-dist-matrix');
+    if (!matrixEl || !currentRowData) return;
+
+    const rawDefs = METRICS[activeAdtype] || [];
+    const allDefs = rawDefs.slice(0, BD_MAX_COLS);   // max 3 cols
+    if (!allDefs.length) { matrixEl.innerHTML = ''; return; }
+
+    const ddVal = document.getElementById('dp-dist-dd-val');
+    if (ddVal) ddVal.textContent = `${allDefs.length} Selected`;
+
+    const TIERS = [
+      { key:'t1', label:'P0–P25',   cls:'bd-t1' },
+      { key:'t2', label:'P25–P50',  cls:'bd-t2' },
+      { key:'t3', label:'P50–P75',  cls:'bd-t3' },
+      { key:'t4', label:'P75–P100', cls:'bd-t4' },
+    ];
+    const INFO_SM = `<svg viewBox="0 0 16 16" fill="none" style="width:16px;height:16px;color:#B2B2B8;flex-shrink:0;vertical-align:middle"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5.2" r=".65" fill="currentColor"/></svg>`;
+
+    let html = `<table class="bd-matrix">
+      <thead><tr>
+        <th class="bd-hdr-pv"><span style="display:inline-flex;align-items:center;gap:4px">Percentile Values ${INFO_SM}</span></th>
+        ${allDefs.map(d=>`<th class="bd-hdr-metric">${d.label}</th>`).join('')}
+      </tr></thead><tbody>`;
+
+    TIERS.forEach(tier => {
+      html += `<tr><td class="bd-cell-pv"><span class="bd-tier-badge ${tier.cls}">${tier.label}</span></td>`;
+
+      allDefs.forEach(def => {
+        const m = (currentRowData.metrics[activeAdtype]||{})[def.key];
+        const brands = [];
+        if (m) {
+          const { val, p50 } = m;
+          const p25 = p50 * 0.75, p75 = p50 * 1.25;
+          if (pctBucket(val, p25, p50, p75) === tier.key)
+            brands.push({ name: currentRowData.brand, isMe: true });
+          DIST_PEERS.forEach((name, i) => {
+            const hash = (name.charCodeAt(0) * 7 + def.key.charCodeAt(0) * 13 + i * 3) % 100;
+            const mockVal = p25 * 0.5 + (p75 * 1.6 - p25 * 0.5) * (hash / 100);
+            if (pctBucket(mockVal, p25, p50, p75) === tier.key)
+              brands.push({ name, isMe: false });
+          });
+        }
+        html += `<td class="bd-cell-metric">${bdCellHtml(brands, true)}</td>`;
+      });
+      html += `</tr>`;
+    });
+
+    html += `</tbody></table>`;
+    matrixEl.innerHTML = html;
+
+    // ── Event delegation: expand / collapse ─────────
+    matrixEl.addEventListener('click', function handler(e) {
+      const moreBtn = e.target.closest('.bd-tag-more');
+      const lessBtn = e.target.closest('.bd-tag-less');
+      if (!moreBtn && !lessBtn) return;
+
+      const btn = moreBtn || lessBtn;
+      const cell = btn.closest('.bd-cell-metric');
+      const brands = JSON.parse(btn.dataset.brands);
+      cell.innerHTML = bdCellHtml(brands, !!lessBtn); // expand if clicking "more", collapse if "less"
+    }, { once: false });
+    // Remove old listeners by replacing the node (avoid stacking)
+    const fresh = matrixEl.cloneNode(true);
+    matrixEl.parentNode.replaceChild(fresh, matrixEl);
+    fresh.addEventListener('click', e => {
+      const moreBtn = e.target.closest('.bd-tag-more');
+      const lessBtn = e.target.closest('.bd-tag-less');
+      if (!moreBtn && !lessBtn) return;
+      const btn    = moreBtn || lessBtn;
+      const cell   = btn.closest('.bd-cell-metric');
+      const brands = JSON.parse(btn.dataset.brands);
+      cell.innerHTML = bdCellHtml(brands, !!lessBtn);
+    });
+  }
+
+  // ── §6: Detail metric table ─────────────────────
+  function renderDetailTable() {
+    const defs = METRICS[activeAdtype]||[];
+    dtableTitle.textContent = `${activeAdtype.toUpperCase()} Metrics — All Dimensions`;
+
+    dtableBody.innerHTML = defs.map(def => {
+      const m = (currentRowData.metrics[activeAdtype]||{})[def.key];
+      if (!m) return '';
+      const { val, p50 } = m;
+      const p25=p50*0.75, p75=p50*1.25;
+      const tier=getTier(val,p50);
+      const lastVal = val*(0.88+Math.random()*0.24);
+
+      function dtDelta(bench) {
+        const pct=(val-bench)/Math.abs(bench)*100;
+        const isUp=pct>=0;
+        const isGood=def.good==='high'?isUp:!isUp;
+        const cls=Math.abs(pct)<0.5?'neu':isGood?'pos':'neg';
+        return `<span class="dp-dt-delta ${cls}">${pct>=0?'+':''}${pct.toFixed(1)}% ${dpArrow(isUp)}</span>`;
+      }
+      const lastDelta=()=>{
+        const pct=(val-lastVal)/Math.abs(lastVal)*100;
+        const isUp=pct>=0;
+        const isGood=def.good==='high'?isUp:!isUp;
+        const cls=Math.abs(pct)<0.5?'neu':isGood?'pos':'neg';
+        return `<span class="dp-dt-delta ${cls}">${pct>=0?'+':''}${pct.toFixed(1)}% ${dpArrow(isUp)}</span>`;
+      };
+
+      return `<tr>
+        <td>${def.label}</td>
+        <td><b>${def.fmt(val)}</b></td>
+        <td><span class="dt-tier ${tier}">${TIER_NAMES[tier]}</span></td>
+        <td>${def.fmt(p25)}</td>
+        <td>${def.fmt(p50)}</td>
+        <td>${def.fmt(p75)}</td>
+        <td>${dtDelta(p25)}</td>
+        <td>${dtDelta(p50)}</td>
+        <td>${dtDelta(p75)}</td>
+        <td>${lastDelta()}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── Master render ───────────────────────────────
+  function renderAll() {
+    renderBrandSection();
+    renderTrendChart(activeTrendMetric);
+    renderBrandDist();
+    renderDetailTable();
+  }
+
+  // ── Open panel ──────────────────────────────────
+  function openPanel(td) {
+    const tr       = td.closest('tr');
+    const catName  = tr?.querySelector('.cat-name')?.textContent?.trim()||'—';
+    const levelCls = Array.from(tr?.classList||[]).find(c=>/^l\d-row$/.test(c));
+    const level    = levelCls ? levelCls.replace('l','').replace('-row','') : '—';
+    const tableCard= td.closest('.table-card');
+    const brandName= tableCard?.querySelector('.brand-title')?.textContent?.trim()||'—';
+    const catPath  = tableCard?.querySelector('.profile-tab.active')?.textContent?.trim()||brandName;
+
+    currentRowData = { brand:brandName, catName, level, metrics: collectRowMetrics(tr) };
+
+    // Filter bar labels
+    elFBrand.textContent = brandName;
+    elFLayer.textContent = level==='—' ? 'L2' : `L${level}`;
+
+    // Active adtype from clicked cell
+    activeAdtype = (td.dataset.adtype||'SP').toLowerCase();
+    adtypeSeg.querySelectorAll('.dp-seg-btn').forEach(b=>b.classList.toggle('active',b.dataset.at===activeAdtype));
+
+    // Rebuild trend metric menu for this adtype
+    const allDefs = METRICS[activeAdtype]||[];
+    trendToggle.innerHTML = allDefs.map((d,i)=>
+      `<div class="dp-trend-metric-menu-item${i===0?' active':''}" data-m="${d.key}">${d.label}</div>`
+    ).join('');
+    activeTrendMetric = allDefs[0]?.key || 'ctr';
+    if (trendMetricVal) trendMetricVal.textContent = allDefs[0]?.label || 'CTR';
+
+
+    renderAll();
+
+    backdrop.classList.add('open');
+    panel.classList.add('open');
+    document.body.style.overflow='hidden';
+    panel.querySelector('#dp-body').scrollTop=0;
+  }
+
+  function closePanel() {
+    backdrop.classList.remove('open');
+    panel.classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  // ── Events ─────────────────────────────────────
+  btnClose.addEventListener('click', closePanel);
+  backdrop.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePanel(); });
+
+  adtypeSeg.addEventListener('click', e=>{
+    const btn=e.target.closest('.dp-seg-btn');
+    if(!btn) return;
+    activeAdtype=btn.dataset.at;
+    adtypeSeg.querySelectorAll('.dp-seg-btn').forEach(b=>b.classList.toggle('active',b===btn));
+    renderAll();
+  });
+
+  // Metric dropdown toggle
+  trendMetricDd.addEventListener('click', e => {
+    const item = e.target.closest('.dp-trend-metric-menu-item');
+    if (item) {
+      activeTrendMetric = item.dataset.m;
+      trendToggle.querySelectorAll('.dp-trend-metric-menu-item').forEach(i=>i.classList.toggle('active',i===item));
+      trendMetricVal.textContent = item.textContent;
+      trendToggle.classList.remove('open');
+      renderTrendChart(activeTrendMetric);
+    } else {
+      trendToggle.classList.toggle('open');
+    }
+    e.stopPropagation();
+  });
+  document.addEventListener('click', () => trendToggle.classList.remove('open'));
+
+
+  // Hook into main table cell clicks
+  const container=document.getElementById('brandContainer');
+  container.addEventListener('click', e=>{
+    const td=e.target.closest('.td-m[data-val]');
+    if(td) openPanel(td);
+  });
+})();
+</script>
+
+</body>
+</html>
