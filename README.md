@@ -6,7 +6,27 @@
 
 ## 📁 benchmark 2.0 renew
 
-### Brand Benchmark v3.0 UI 调整版 ✨ Latest
+### Brand Benchmark v3.2 UI ✨ Latest
+
+更新日期：2026-05-20
+
+**👉 [点击查看 Brand Benchmark v3.2 UI 原型](https://kiwilu-bit.github.io/amazon-design/benchmark%202.0%20renew/brand-benchmark-v3.2-ui.html)**
+
+#### v3.2 更新亮点
+
+- **7 步新手引导（全流程覆盖）**：
+  - **Step 1**：Category Depth Levels — 介绍 L1–L4 类目层级与精准对标关系
+  - **Step 2**：Understanding Percentile Benchmarks — P25 / P50 / P75 含义与「高/低 better」说明
+  - **Step 3**：Details in each Cell — 聚焦 VS Pxx 区域，介绍自动对标下一阶梯 + 点击跳转详情
+  - **Step 4**：Performance vs Benchmark — 自动打开详情面板，定位核心指标模块
+  - **Step 5**：Brand Distribution — 定位竞品分布模块
+  - **Step 6**：Find Campaigns That Need Attention — 定位 Underperforming Campaigns 模块
+  - **Step 7**：You're all set — 自动关闭详情页，回到首页，聚焦 Filter 区域，以「Got it!」收尾
+- **Step 3 聚焦优化**：spotlight 精确定位到单元格右上角 VS Pxx 区域，而非整个单元格
+
+---
+
+### Brand Benchmark v3.0 UI 调整版
 
 更新日期：2026-05-19
 
