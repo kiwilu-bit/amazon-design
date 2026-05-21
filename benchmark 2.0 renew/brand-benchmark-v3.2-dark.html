@@ -1817,10 +1817,10 @@ td.cell-hl {
 .tour-tt-footer { display: flex; align-items: center; justify-content: space-between; }
 .tour-tt-skip {
   font-size: 14px; cursor: pointer;
-  background: none; border: none; padding: 0; font-family: 'Inter', sans-serif;
-  transition: color 0.15s; height: 36px;
+  background: none; border: none; padding: 0 4px; font-family: 'Inter', sans-serif;
+  transition: opacity 0.15s; height: 36px;
 }
-.tour-tt-skip:hover { color: rgba(255,255,255,0.75); }
+.tour-tt-skip:hover { opacity: 0.7; }
 .tour-tt-actions { display: flex; align-items: center; gap: 8px; }
 
 /* Primary button: white bg + dark text — Figma spec */
@@ -3374,7 +3374,6 @@ renderAll();
       position: 'below',
       html: () => `
         <div class="tour-tt-content">
-          <div class="tour-tt-step">Step 1 of ${TOTAL}</div>
           <div class="tour-tt-title">Category Depth Levels</div>
           <div class="tour-tt-body">Amazon organizes products into 4 category levels. The deeper the level, the closer the peer comparison.</div>
           <div class="tour-tt-table">
@@ -3391,8 +3390,9 @@ renderAll();
           </a>
         </div>
         <div class="tour-tt-footer">
-          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <span class="tour-tt-step">1 of ${TOTAL}</span>
           <div class="tour-tt-actions">
+            <button class="tour-tt-skip" id="tt-skip">Skip</button>
             <button class="tour-btn-tt-primary" id="tt-next">Next</button>
           </div>
         </div>`
@@ -3404,7 +3404,6 @@ renderAll();
       position: 'right',
       html: () => `
         <div class="tour-tt-content">
-          <div class="tour-tt-step">Step 2 of ${TOTAL}</div>
           <div class="tour-tt-title">Understanding Percentile Benchmarks</div>
           <div class="tour-tt-body">P25 / P50 / P75 are percentile values based on all advertisers in your category, ranked from low to high:</div>
           <div class="tour-tt-table">
@@ -3420,9 +3419,9 @@ renderAll();
           </div>
         </div>
         <div class="tour-tt-footer">
-          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <span class="tour-tt-step">2 of ${TOTAL}</span>
           <div class="tour-tt-actions">
-            <button class="tour-btn-tt-ghost" id="tt-back">Back</button>
+            <button class="tour-tt-skip" id="tt-skip">Skip</button>
             <button class="tour-btn-tt-primary" id="tt-next">Next</button>
           </div>
         </div>`
@@ -3434,7 +3433,6 @@ renderAll();
       position: 'right',
       html: () => `
         <div class="tour-tt-content">
-          <div class="tour-tt-step">Step 3 of ${TOTAL}</div>
           <div class="tour-tt-title">Details in each Cell</div>
           <div class="tour-tt-body">The right side auto-compares your metric against the next benchmark tier — instantly showing how far you are from the next level.</div>
           <div class="tour-tt-tip">
@@ -3443,9 +3441,9 @@ renderAll();
           </div>
         </div>
         <div class="tour-tt-footer">
-          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <span class="tour-tt-step">3 of ${TOTAL}</span>
           <div class="tour-tt-actions">
-            <button class="tour-btn-tt-ghost" id="tt-back">Back</button>
+            <button class="tour-tt-skip" id="tt-skip">Skip</button>
             <button class="tour-btn-tt-primary" id="tt-next">Next</button>
           </div>
         </div>`
@@ -3461,14 +3459,13 @@ renderAll();
       },
       html: () => `
         <div class="tour-tt-content">
-          <div class="tour-tt-step">Step 4 of ${TOTAL}</div>
           <div class="tour-tt-title">Performance vs Benchmark</div>
           <div class="tour-tt-body">See how core metrics like CTR, CPC, and CPM compare against P25 / P50 / P75 — and how they've shifted from the previous period. Spot winners and laggards at a glance.</div>
         </div>
         <div class="tour-tt-footer">
-          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <span class="tour-tt-step">4 of ${TOTAL}</span>
           <div class="tour-tt-actions">
-            <button class="tour-btn-tt-ghost" id="tt-back">Back</button>
+            <button class="tour-tt-skip" id="tt-skip">Skip</button>
             <button class="tour-btn-tt-primary" id="tt-next">Next</button>
           </div>
         </div>`
@@ -3484,14 +3481,13 @@ renderAll();
       },
       html: () => `
         <div class="tour-tt-content">
-          <div class="tour-tt-step">Step 5 of ${TOTAL}</div>
           <div class="tour-tt-title">Brand Distribution</div>
           <div class="tour-tt-body">See where your brand stands among all advertisers in the same category — understand the competitive landscape and identify the gap you need to close.</div>
         </div>
         <div class="tour-tt-footer">
-          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <span class="tour-tt-step">5 of ${TOTAL}</span>
           <div class="tour-tt-actions">
-            <button class="tour-btn-tt-ghost" id="tt-back">Back</button>
+            <button class="tour-tt-skip" id="tt-skip">Skip</button>
             <button class="tour-btn-tt-primary" id="tt-next">Next</button>
           </div>
         </div>`
@@ -3507,14 +3503,13 @@ renderAll();
       },
       html: () => `
         <div class="tour-tt-content">
-          <div class="tour-tt-step">Step 6 of ${TOTAL}</div>
           <div class="tour-tt-title">Find Campaigns That Need Attention</div>
           <div class="tour-tt-body">Automatically surfaces the Top 10 highest-spend campaigns underperforming against benchmarks — pinpoint exactly where to optimize and cut wasted spend.</div>
         </div>
         <div class="tour-tt-footer">
-          <button class="tour-tt-skip" id="tt-skip">Skip tour</button>
+          <span class="tour-tt-step">6 of ${TOTAL}</span>
           <div class="tour-tt-actions">
-            <button class="tour-btn-tt-ghost" id="tt-back">Back</button>
+            <button class="tour-tt-skip" id="tt-skip">Skip</button>
             <button class="tour-btn-tt-primary" id="tt-next">Next</button>
           </div>
         </div>`
@@ -3527,13 +3522,12 @@ renderAll();
       scrollTo: null,
       html: () => `
         <div class="tour-tt-content">
-          <div class="tour-tt-step">Step 7 of ${TOTAL}</div>
           <div class="tour-tt-title">You're all set. Ready to begin?</div>
           <div class="tour-tt-body">Select a brand to explore how it performs against industry benchmarks.</div>
         </div>
         <div class="tour-tt-footer">
-          <div class="tour-tt-actions" style="margin-left:auto;">
-            <button class="tour-btn-tt-ghost" id="tt-back">Back</button>
+          <span class="tour-tt-step">7 of ${TOTAL}</span>
+          <div class="tour-tt-actions">
             <button class="tour-btn-tt-primary" id="tt-done">Got it!</button>
           </div>
         </div>`
