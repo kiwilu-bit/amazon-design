@@ -6,7 +6,20 @@
 
 ## 📁 benchmark 2.0 renew
 
-### Brand Benchmark v3.2 UI ✨ Latest
+### Brand Benchmark v3.2 Dark ✨ Latest
+
+更新日期：2026-05-21
+
+**👉 [点击查看 Brand Benchmark v3.2 Dark 原型](https://kiwilu-bit.github.io/amazon-design/benchmark%202.0%20renew/brand-benchmark-v3.2-dark.html)**
+
+#### v3.2 Dark 更新亮点
+
+- **引导 Tooltip 深色主题**：点击 Get Started 后，7 步引导的所有 Tooltip 卡片切换为深色背景（`#001124`）白色文字，视觉层次更清晰，聚焦感更强
+- 继承 v3.2 UI 全部功能（7 步新手引导、完整详情面板 6 模块、雷达图、Underperforming Campaigns 等）
+
+---
+
+### Brand Benchmark v3.2 UI
 
 更新日期：2026-05-20
 
